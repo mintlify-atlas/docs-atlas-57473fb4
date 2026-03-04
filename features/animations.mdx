@@ -1,0 +1,453 @@
+---
+title: Animations
+description: Learn how Velaria uses Tailwind CSS animated classes and intersection observer for smooth scroll animations
+---
+
+Velaria uses two powerful animation libraries to create smooth, performant animations throughout the site:
+- **tailwindcss-animated** for pre-built animation classes
+- **tailwindcss-intersect** for scroll-triggered animations
+
+These tools work together to create engaging visual experiences without writing custom CSS or JavaScript.
+
+## Animation libraries
+
+Both libraries are installed via npm:
+
+```json package.json
+{
+  "dependencies": {
+    "tailwindcss-animated": "^2.0.0",
+    "tailwindcss-intersect": "^2.2.0"
+  }
+}
+```
+
+<Note>
+  These libraries extend Tailwind CSS with new utility classes. No additional configuration is required.
+</Note>
+
+## Intersection observer setup
+
+The `tailwindcss-intersect` plugin requires a script to observe elements:
+
+```astro src/layouts/Layout.astro
+<script 
+  src="https://unpkg.com/tailwindcss-intersect@2.x.x/dist/observer.min.js"
+></script>
+```
+
+**Location:** `src/layouts/Layout.astro:31`
+
+<Warning>
+  This script must be loaded before any components use `intersect:` classes. Place it in your main layout file to ensure it's available on all pages.
+</Warning>
+
+### How it works
+
+<Steps>
+  <Step title="Observer initialization">
+    The script creates an Intersection Observer that watches for elements with `intersect:` classes.
+  </Step>
+  
+  <Step title="Element detection">
+    When an element enters the viewport, the observer detects it.
+  </Step>
+  
+  <Step title="Class application">
+    The `intersect:` classes are applied, triggering animations.
+  </Step>
+  
+  <Step title="One-time execution">
+    By default, animations only trigger once per page load.
+  </Step>
+</Steps>
+
+## Available animation classes
+
+### Fade animations
+
+```css
+animate-fade         /* Fade in */
+animate-fade-up      /* Fade in from bottom */
+animate-fade-down    /* Fade in from top */
+animate-fade-left    /* Fade in from right */
+animate-fade-right   /* Fade in from left */
+```
+
+### Scale animations
+
+```css
+animate-scale-up     /* Scale up from 0 to 100% */
+animate-scale-down   /* Scale down */
+```
+
+### Slide animations
+
+```css
+animate-slide-up     /* Slide up */
+animate-slide-down   /* Slide down */
+animate-slide-left   /* Slide left */
+animate-slide-right  /* Slide right */
+```
+
+### Specialized animations
+
+```css
+animate-bounce       /* Bounce effect */
+animate-spin         /* Continuous rotation */
+animate-ping         /* Expanding circle effect */
+animate-pulse        /* Pulsing scale effect */
+```
+
+<Tip>
+  View all available animations in the [tailwindcss-animated documentation](https://github.com/new-data-services/tailwindcss-animated).
+</Tip>
+
+## Animation modifiers
+
+### Duration
+
+Control how long animations take:
+
+```css
+animate-duration-[1000ms]   /* 1 second */
+animate-duration-[500ms]    /* 0.5 seconds */
+animate-duration-[2000ms]   /* 2 seconds */
+```
+
+### Delay
+
+Add delays before animations start:
+
+```css
+delay-200    /* 200ms delay */
+delay-300    /* 300ms delay */
+delay-500    /* 500ms delay */
+```
+
+### Repeat
+
+```css
+animate-once      /* Play once (default) */
+animate-infinite  /* Loop forever */
+```
+
+### Easing
+
+```css
+animate-ease-in       /* Slow start */
+animate-ease-out      /* Slow end */
+animate-ease-in-out   /* Slow start and end */
+```
+
+## Real-world examples
+
+### Product catalog animations
+
+Each product card scales up and fades in with a staggered delay:
+
+```astro src/components/Catalogo.astro
+<!-- First product: no delay -->
+<div class="group scale-50 opacity-0 intersect:scale-100 intersect:opacity-100 transition duration-500">
+  <!-- Product content -->
+</div>
+
+<!-- Second product: 200ms delay -->
+<div class="group scale-50 opacity-0 intersect:scale-100 intersect:opacity-100 transition delay-200 duration-600">
+  <!-- Product content -->
+</div>
+
+<!-- Third product: 300ms delay -->
+<div class="group scale-50 opacity-0 intersect:scale-100 intersect:opacity-100 transition delay-300 duration-700">
+  <!-- Product content -->
+</div>
+
+<!-- Fourth product: 400ms delay -->
+<div class="group scale-50 opacity-0 intersect:scale-100 intersect:opacity-100 transition delay-400 duration-800">
+  <!-- Product content -->
+</div>
+
+<!-- Remaining products: 500ms delay -->
+<div class="group scale-50 opacity-0 intersect:scale-100 intersect:opacity-100 transition delay-500 duration-900">
+  <!-- Product content -->
+</div>
+```
+
+**See it in action:** `src/components/Catalogo.astro:14-127`
+
+<Accordion title="Animation breakdown">
+  <Steps>
+    <Step title="Initial state">
+      - `scale-50`: Product starts at 50% size
+      - `opacity-0`: Completely transparent
+    </Step>
+    
+    <Step title="Intersection trigger">
+      When the element enters viewport:
+      - `intersect:scale-100`: Scales to full size
+      - `intersect:opacity-100`: Fades to fully visible
+    </Step>
+    
+    <Step title="Transition properties">
+      - `transition`: Enables smooth animation
+      - `delay-X`: Staggers each product's animation
+      - `duration-X`: Each product animates slightly longer
+    </Step>
+  </Steps>
+</Accordion>
+
+### Fragrances fade-up
+
+The fragrances section uses a pre-built fade-up animation:
+
+```astro src/components/Fragancias.astro
+<div 
+  class="flex flex-col justify-center items-center 
+         intersect:animate-fade-up 
+         animate-once 
+         animate-duration-[1000ms] 
+         animate-ease-in 
+         my-20"
+>
+  <div class="w-[80%] lg:w-[50%]">
+    <h2 class="text-center text-3xl mb-10">Fragancias disponibles</h2>
+    <ul>
+      <li class="mb-5 text-2xl text-orange-900 text-center italic">Vainilla</li>
+      <!-- More fragrances... -->
+    </ul>
+  </div>
+</div>
+```
+
+**See it in action:** `src/components/Fragancias.astro:2`
+
+<Accordion title="Classes explained">
+  - `intersect:animate-fade-up`: Fades in from below when visible
+  - `animate-once`: Only animates once (no repeat on re-scroll)
+  - `animate-duration-[1000ms]`: 1 second animation
+  - `animate-ease-in`: Smooth acceleration
+</Accordion>
+
+## ScrollToTop component
+
+The "back to top" button uses vanilla JavaScript for smooth scrolling:
+
+```astro src/components/ScrollToTop.astro
+<button
+  type="button"
+  class="!fixed bottom-5 end-5 hidden rounded-full bg-amber-600 
+         p-4 text-xs font-medium uppercase leading-tight text-white 
+         shadow-md transition duration-150 ease-in-out 
+         hover:bg-amber-700 hover:shadow-lg 
+         focus:bg-amber-700 focus:shadow-lg focus:outline-none focus:ring-0 
+         active:bg-amber-800 active:shadow-lg"
+  id="btn-back-to-top"
+>
+  <span class="[&>svg]:w-6">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
+         stroke-width="3" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" 
+            d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+    </svg>
+  </span>
+</button>
+```
+
+**See it in action:** `src/components/ScrollToTop.astro:1-21`
+
+### JavaScript implementation
+
+The button's behavior is controlled in the main layout:
+
+```javascript src/layouts/Layout.astro
+const mybutton = document.getElementById("btn-back-to-top");
+
+const scrollFunction = () => {
+  if (
+    document.body.scrollTop > 20 ||
+    document.documentElement.scrollTop > 20
+  ) {
+    mybutton.classList.remove("hidden");
+  } else {
+    mybutton.classList.add("hidden");
+  }
+};
+
+const backToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+mybutton.addEventListener("click", backToTop);
+window.addEventListener("scroll", scrollFunction);
+```
+
+**Location:** `src/layouts/Layout.astro:46-70`
+
+<Accordion title="How it works">
+  <Steps>
+    <Step title="Visibility toggle">
+      The button is hidden by default. When the user scrolls more than 20px, the `hidden` class is removed.
+    </Step>
+    
+    <Step title="Smooth scroll">
+      Clicking the button calls `window.scrollTo()` with `behavior: "smooth"` for animated scrolling.
+    </Step>
+    
+    <Step title="Hover effects">
+      Tailwind classes handle hover, focus, and active states with transitions.
+    </Step>
+  </Steps>
+</Accordion>
+
+### Button states
+
+| State | Background | Shadow |
+|-------|------------|--------|
+| Default | `bg-amber-600` | `shadow-md` |
+| Hover | `bg-amber-700` | `shadow-lg` |
+| Focus | `bg-amber-700` | `shadow-lg` |
+| Active | `bg-amber-800` | `shadow-lg` |
+
+## Parallax header effect
+
+The main header uses a parallax effect for depth:
+
+```javascript src/layouts/Layout.astro
+let header = document.querySelector('.main-header');
+
+window.addEventListener('scroll', () => {
+  const offset = window.pageYOffset;
+  // Move background at half the scroll speed
+  header.style.backgroundPositionY = offset * 0.3 + 'px';
+});
+```
+
+**Location:** `src/layouts/Layout.astro:36-42`
+
+<Note>
+  The background moves at 30% of the scroll speed (0.3 multiplier), creating a subtle depth effect.
+</Note>
+
+## Creating custom animations
+
+You can combine utility classes to create custom effects:
+
+### Example: Slide and fade
+
+```astro
+<div 
+  class="translate-y-10 opacity-0 
+         intersect:translate-y-0 intersect:opacity-100 
+         transition duration-700 ease-out"
+>
+  <!-- Content -->
+</div>
+```
+
+### Example: Scale and rotate
+
+```astro
+<div 
+  class="scale-0 rotate-45 
+         intersect:scale-100 intersect:rotate-0 
+         transition duration-1000"
+>
+  <!-- Content -->
+</div>
+```
+
+### Example: Multiple property animation
+
+```astro
+<div 
+  class="scale-75 opacity-0 blur-sm 
+         intersect:scale-100 intersect:opacity-100 intersect:blur-0 
+         transition-all duration-500"
+>
+  <!-- Content -->
+</div>
+```
+
+<Tip>
+  Use `transition-all` to animate all changing properties simultaneously.
+</Tip>
+
+## Performance considerations
+
+<Steps>
+  <Step title="Use transform and opacity">
+    These properties are GPU-accelerated and perform best:
+    ```css
+    transform: scale(), translateX(), translateY(), rotate()
+    opacity: 0 to 1
+    ```
+  </Step>
+  
+  <Step title="Avoid animating layout properties">
+    These properties cause reflows and hurt performance:
+    ```css
+    width, height, margin, padding, top, left
+    ```
+  </Step>
+  
+  <Step title="Use animate-once">
+    Prevent repeated animations on scroll:
+    ```css
+    animate-once
+    ```
+  </Step>
+  
+  <Step title="Reduce motion for accessibility">
+    Respect user preferences:
+    ```css
+    motion-reduce:animate-none
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  Too many simultaneous animations can impact performance. Stagger animations using delays to spread the workload.
+</Warning>
+
+## Accessibility best practices
+
+### Respect reduced motion preference
+
+```astro
+<div 
+  class="intersect:animate-fade-up 
+         motion-reduce:animate-none 
+         motion-reduce:opacity-100"
+>
+  <!-- Content -->
+</div>
+```
+
+This disables animations for users who have enabled "reduce motion" in their system settings.
+
+### Ensure content is accessible without animation
+
+- Never hide critical content behind animations
+- Use `animate-once` to prevent distracting loops
+- Maintain sufficient contrast during all animation states
+
+### Provide alternative indicators
+
+For interactive elements like ScrollToTop, ensure:
+- Clear focus states (`focus:outline`, `focus:ring`)
+- Adequate color contrast (WCAG AA minimum)
+- Touch-friendly sizing (minimum 44x44px)
+
+## Related components
+
+<Card title="Product catalog" icon="shopping-bag" href="/features/product-catalog">
+  See staggered scale animations in action
+</Card>
+
+<Card title="Fragrances" icon="leaf" href="/features/fragrances">
+  View the fade-up animation example
+</Card>
+
+<Card title="Contact form" icon="envelope" href="/features/contact-form">
+  Learn about form interactions and states
+</Card>

@@ -1,0 +1,385 @@
+---
+title: Layouts
+description: Understanding Layout.astro and how layouts wrap page content in the Velaria project
+---
+
+Layouts are Astro components that provide reusable page structures. Velaria uses a single layout component that wraps all pages with consistent HTML structure, navigation, and scripts.
+
+## Layout file
+
+The project has one layout file:
+
+```
+src/layouts/
+└── Layout.astro
+```
+
+This layout is used by all pages in the application.
+
+## Layout.astro structure
+
+`src/layouts/Layout.astro`
+
+The main layout component that wraps all page content:
+
+```astro
+---
+import Navbar from "../components/Navbar.astro";
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+}
+
+const {title} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <Navbar />
+      <slot />
+      <Footer />
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+    <script src="https://unpkg.com/tailwindcss-intersect@2.x.x/dist/observer.min.js"></script>
+
+    <script>
+      // JavaScript for interactions
+    </script>
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    font-family: "Glaciar Indifference", serif;
+  }
+</style>
+```
+
+## Layout anatomy
+
+<Steps>
+
+### Frontmatter imports
+
+The layout imports shared components and styles:
+
+```astro
+---
+import Navbar from "../components/Navbar.astro";
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+}
+
+const {title} = Astro.props;
+---
+```
+
+<Note>
+The `Props` interface defines that every page must pass a `title` prop to the layout.
+</Note>
+
+### HTML head
+
+Meta tags and page configuration:
+
+```html
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="generator" content={Astro.generator} />
+  <title>{title}</title>
+</head>
+```
+
+**Head elements:**
+- UTF-8 character encoding
+- Responsive viewport meta tag
+- SVG favicon reference
+- Astro generator meta tag
+- Dynamic page title from props
+
+### Body structure
+
+The layout wraps page content with navigation and footer:
+
+```html
+<body>
+  <main>
+    <Navbar />
+    <slot />
+    <Footer />
+  </main>
+</body>
+```
+
+<Tip>
+The `<slot />` is where page content is inserted. Pages using this layout will have their content rendered between Navbar and Footer.
+</Tip>
+
+### External scripts
+
+Two external libraries loaded via CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+<script src="https://unpkg.com/tailwindcss-intersect@2.x.x/dist/observer.min.js"></script>
+```
+
+**Libraries:**
+1. **Tailwind Plus Elements** - Pre-built UI components
+2. **Tailwind Intersect** - Scroll-based animations and intersection observer utilities
+
+</Steps>
+
+## Interactive scripts
+
+The layout includes JavaScript for three main features:
+
+### 1. Parallax effect
+
+Creates a parallax scrolling effect on the header background:
+
+```javascript
+let header = document.querySelector('.main-header');
+
+// Parallax effect on background
+window.addEventListener('scroll', () => {
+  const offset = window.pageYOffset;
+  // Move background at half scroll speed
+  header.style.backgroundPositionY = offset * 0.3 + 'px';
+});
+```
+
+<Accordion title="How parallax works">
+
+The background moves at 30% of the scroll speed (`offset * 0.3`), creating a depth effect where the background appears to move slower than the foreground content.
+
+</Accordion>
+
+### 2. Scroll to top button
+
+Shows/hides the back-to-top button based on scroll position:
+
+```javascript
+const mybutton = document.getElementById("btn-back-to-top");
+
+const scrollFunction = () => {
+  if (
+    document.body.scrollTop > 20 ||
+    document.documentElement.scrollTop > 20
+  ) {
+    mybutton.classList.remove("hidden");
+  } else {
+    mybutton.classList.add("hidden");
+  }
+};
+
+const backToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+mybutton.addEventListener("click", backToTop);
+window.addEventListener("scroll", scrollFunction);
+```
+
+**Behavior:**
+- Button appears after scrolling 20px down
+- Smooth scroll animation when clicked
+- Hidden by default
+
+<Note>
+The button element is defined in the `ScrollToTop.astro` component with `id="btn-back-to-top"`.
+</Note>
+
+### 3. Dynamic WhatsApp contact
+
+Changes WhatsApp number based on time of day:
+
+```javascript
+const fecha = new Date();
+const hora = fecha.getHours();
+
+if(hora > 12){
+  let whatsapp = document.getElementById('num-whatsapp');
+  whatsapp?.setAttribute('href', 'https://wa.me/5214777551754')
+}
+```
+
+**Logic:**
+- Gets current hour
+- If after 12 PM (noon), updates WhatsApp link
+- Allows routing to different support numbers based on time
+
+<Tip>
+This enables different team members to handle inquiries during different shifts.
+</Tip>
+
+## Global styles
+
+The layout includes base styles for the entire site:
+
+```css
+<style>
+  html,
+  body {
+    margin: 0;
+    font-family: "Glaciar Indifference", serif;
+  }
+</style>
+```
+
+**Global CSS file:**
+
+The layout also imports `src/styles/global.css`:
+
+```css
+@import "tailwindcss";
+@import "tailwindcss-animated";
+@import "tailwindcss-intersect";
+
+.main-header {
+    position: relative;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.263), rgba(0,0,0,0.4)), 
+                      url('../assets/images/header2.png');
+    background-size: cover;
+    background-position-y: 0.3px;
+    color: white;
+}
+
+@media(max-width: 720px) {
+    .main-header { 
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0,0,0,0.6)), 
+                          url('../assets/images/bolitas.jpg');
+        position: sticky !important;
+    }
+}
+```
+
+<Warning>
+The `.main-header` class uses different background images for mobile vs desktop, optimizing for each viewport size.
+</Warning>
+
+## Using the layout
+
+Pages use the layout by importing and wrapping content:
+
+```astro
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+---
+
+<Layout title="VELARIA | Inicio">
+  <Header title="Welcome" subtitle="to Velaria" />
+  <!-- More page content -->
+</Layout>
+```
+
+**Every page renders as:**
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <title>VELARIA | Inicio</title>
+    <!-- meta tags, favicon, etc -->
+  </head>
+  <body>
+    <main>
+      <Navbar />
+      
+      <!-- Page content goes here -->
+      <Header title="Welcome" subtitle="to Velaria" />
+      <!-- More components -->
+      
+      <Footer />
+    </main>
+    <!-- scripts -->
+  </body>
+</html>
+```
+
+## Layout features summary
+
+<Card title="Consistent structure" icon="layout">
+Every page has the same HTML structure, meta tags, and navigation without repeating code.
+</Card>
+
+<Card title="Global JavaScript" icon="code">
+Interactive features (parallax, scroll-to-top, dynamic contacts) work across all pages.
+</Card>
+
+<Card title="Shared components" icon="puzzle">
+Navbar and Footer appear on every page automatically.
+</Card>
+
+<Card title="External libraries" icon="package">
+Tailwind extensions loaded once and available site-wide.
+</Card>
+
+## Layout vs components
+
+**Layouts:**
+- Wrap entire pages
+- Provide document structure
+- Used via import and wrapping syntax
+- Located in `src/layouts/`
+
+**Components:**
+- Reusable UI pieces
+- Used within pages or layouts
+- Self-contained functionality
+- Located in `src/components/`
+
+<Tip>
+Think of layouts as the "shell" that surrounds your content, while components are the "building blocks" inside that shell.
+</Tip>
+
+## DOMContentLoaded event
+
+All interactive scripts run inside a `DOMContentLoaded` listener:
+
+```javascript
+document.addEventListener("DOMContentLoaded", () =>{
+  // All interactive code here
+  let header = document.querySelector('.main-header');
+  const mybutton = document.getElementById("btn-back-to-top");
+  // ... etc
+})
+```
+
+<Note>
+This ensures the DOM is fully loaded before JavaScript tries to access elements, preventing errors.
+</Note>
+
+## Next steps
+
+<Steps>
+
+1. Review [components](/structure/components) used within layouts
+2. Understand [pages](/structure/pages) that use this layout
+3. Explore the full [project structure](/structure/overview)
+
+</Steps>

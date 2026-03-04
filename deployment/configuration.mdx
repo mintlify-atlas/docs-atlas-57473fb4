@@ -1,0 +1,370 @@
+---
+title: Configuration
+description: Understand Velaria's Astro configuration, build settings, and development setup
+---
+
+This guide covers the configuration files and settings that power the Velaria candle store, including Astro configuration, TypeScript setup, and build dependencies.
+
+## Astro configuration
+
+The main configuration file is `astro.config.mjs`, which defines how your project builds and deploys.
+
+### Complete configuration
+
+```javascript astro.config.mjs
+// @ts-check
+import { defineConfig } from 'astro/config';
+
+import tailwindcss from '@tailwindcss/vite';
+
+import vercel from '@astrojs/vercel';
+
+// https://astro.build/config
+export default defineConfig({
+  output: 'server',
+
+  vite: {
+    plugins: [tailwindcss()]
+  },
+
+  adapter: vercel()
+});
+```
+
+### Configuration breakdown
+
+#### Output mode
+
+```javascript
+output: 'server'
+```
+
+This setting enables server-side rendering (SSR) for your entire application. With SSR:
+
+- Pages are rendered on-demand per request
+- You can use server-side logic and data fetching
+- API routes function as serverless functions
+- Dynamic content is fully supported
+
+<Note>
+Alternatively, you could use `output: 'static'` for a fully static site, or `output: 'hybrid'` to mix static and server-rendered pages.
+</Note>
+
+#### Vite plugins
+
+```javascript
+vite: {
+  plugins: [tailwindcss()]
+}
+```
+
+Velaria uses the Tailwind CSS Vite plugin (`@tailwindcss/vite`) for styling. This integration:
+
+- Processes Tailwind CSS during the build
+- Enables JIT (Just-In-Time) compilation for faster builds
+- Automatically handles CSS optimization and purging
+- Works seamlessly with Vite's hot module replacement (HMR)
+
+<Tip>
+The Vite plugin approach is the modern way to integrate Tailwind CSS v4 with Astro, replacing the legacy PostCSS setup.
+</Tip>
+
+#### Vercel adapter
+
+```javascript
+adapter: vercel()
+```
+
+The Vercel adapter configures your project for deployment to Vercel's platform. It:
+
+- Converts your Astro site to Vercel serverless functions
+- Handles routing and static asset optimization
+- Enables edge runtime capabilities
+- Configures build output for Vercel's infrastructure
+
+See [Deploy to Vercel](/deployment/vercel) for deployment details.
+
+## Tailwind CSS setup
+
+Velaria uses Tailwind CSS v4 with the modern Vite plugin integration.
+
+### Dependencies
+
+```json package.json
+{
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.13",
+    "tailwindcss": "^4.1.13",
+    "tailwindcss-animated": "^2.0.0",
+    "tailwindcss-intersect": "^2.2.0",
+    "@tailwindplus/elements": "^1.0.13"
+  }
+}
+```
+
+### Tailwind plugins
+
+Velaria enhances Tailwind with additional plugins:
+
+<Card title="tailwindcss-animated" icon="sparkles">
+Adds animation utilities for creating smooth, performant animations without custom CSS.
+</Card>
+
+<Card title="tailwindcss-intersect" icon="eye">
+Provides utilities for intersection observer-based animations and visibility detection.
+</Card>
+
+<Card title="@tailwindplus/elements" icon="shapes">
+Extends Tailwind with pre-built UI component styles and design patterns.
+</Card>
+
+<Note>
+Tailwind CSS v4 uses a new configuration system. Instead of `tailwind.config.js`, configuration is handled via CSS `@theme` directives in your stylesheets.
+</Note>
+
+## TypeScript configuration
+
+Velaria uses TypeScript for type safety and better developer experience.
+
+### tsconfig.json
+
+```json tsconfig.json
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "strict": false,
+    "moduleResolution": "bundler",
+    "types": ["astro/client"]
+  }
+}
+```
+
+### Configuration options
+
+#### Base configuration
+
+```json
+"extends": "astro/tsconfigs/strict"
+```
+
+Inherits Astro's recommended strict TypeScript settings, providing a solid foundation for type checking.
+
+#### Compiler options
+
+- **`strict: false`**: Disables strict type checking. You can enable this for more rigorous type safety:
+  
+  ```json
+  "strict": true
+  ```
+
+- **`moduleResolution: "bundler"`**: Uses modern bundler-style module resolution, matching Vite's behavior.
+
+- **`types: ["astro/client"]`**: Includes Astro's client-side type definitions for `import.meta.env` and other runtime features.
+
+<Warning>
+Enabling `strict: true` may require fixing type errors throughout your codebase. Consider enabling it gradually during development.
+</Warning>
+
+## Build settings
+
+Velaria's build process is configured through npm scripts in `package.json`.
+
+### Available scripts
+
+```json package.json
+{
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  }
+}
+```
+
+### Script usage
+
+<CodeGroup>
+
+```bash Development
+npm run dev
+```
+
+```bash Production build
+npm run build
+```
+
+```bash Preview build
+npm run preview
+```
+
+```bash Astro CLI
+npm run astro -- <command>
+```
+
+</CodeGroup>
+
+#### Development server
+
+```bash
+npm run dev
+```
+
+Starts the Astro development server with:
+
+- Hot module replacement (HMR)
+- Fast refresh for instant updates
+- TypeScript type checking
+- Default port: 4321
+
+#### Production build
+
+```bash
+npm run build
+```
+
+Builds your site for production:
+
+1. Compiles TypeScript to JavaScript
+2. Processes Tailwind CSS and optimizes styles
+3. Bundles and minifies assets
+4. Generates Vercel serverless functions
+5. Outputs to the `dist/` directory
+
+<Tip>
+Always run a production build locally before deploying to catch build errors early.
+</Tip>
+
+#### Preview server
+
+```bash
+npm run preview
+```
+
+Serves your production build locally for testing:
+
+- Uses the built files from `dist/`
+- Simulates production environment
+- Useful for final testing before deployment
+
+<Note>
+The preview server doesn't exactly replicate Vercel's environment. Use `vercel dev` for a more accurate local testing experience.
+</Note>
+
+## Project dependencies
+
+Velaria's full dependency list from `package.json`:
+
+```json package.json
+{
+  "dependencies": {
+    "@astrojs/vercel": "^9.0.2",
+    "@tailwindcss/vite": "^4.1.13",
+    "@tailwindplus/elements": "^1.0.13",
+    "astro": "^5.16.6",
+    "sweetalert2": "^11.23.0",
+    "tailwindcss": "^4.1.13",
+    "tailwindcss-animated": "^2.0.0",
+    "tailwindcss-intersect": "^2.2.0"
+  }
+}
+```
+
+### Core dependencies
+
+<Steps>
+  <Step title="astro (^5.16.6)">
+    The core Astro framework providing the build system, routing, and server-side rendering capabilities.
+  </Step>
+  
+  <Step title="@astrojs/vercel (^9.0.2)">
+    Official Vercel adapter for deploying Astro sites with SSR support.
+  </Step>
+  
+  <Step title="tailwindcss (^4.1.13)">
+    The Tailwind CSS framework for utility-first styling.
+  </Step>
+  
+  <Step title="@tailwindcss/vite (^4.1.13)">
+    Vite plugin for integrating Tailwind CSS v4 with the build process.
+  </Step>
+</Steps>
+
+### UI enhancements
+
+- **sweetalert2**: Beautiful, responsive popup boxes for alerts and confirmations
+- **tailwindcss-animated**: Animation utilities for smooth transitions
+- **tailwindcss-intersect**: Intersection observer utilities for scroll-based animations
+- **@tailwindplus/elements**: Pre-built UI component styles
+
+## Module system
+
+```json package.json
+{
+  "type": "module"
+}
+```
+
+Velaria uses ES modules (ESM) as the module system. This means:
+
+- Use `import` and `export` instead of `require()` and `module.exports`
+- All `.js` files are treated as ES modules
+- Configuration files use `.mjs` extension when needed for clarity
+
+<Note>
+Astro v5 requires ES modules. Ensure all your dependencies support ESM or provide ESM builds.
+</Note>
+
+## Customizing configuration
+
+### Adding integrations
+
+To add new Astro integrations:
+
+```bash
+npm install @astrojs/integration-name
+```
+
+Then update `astro.config.mjs`:
+
+```javascript
+import { defineConfig } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
+import vercel from '@astrojs/vercel';
+import newIntegration from '@astrojs/integration-name';
+
+export default defineConfig({
+  output: 'server',
+  vite: {
+    plugins: [tailwindcss()]
+  },
+  adapter: vercel(),
+  integrations: [newIntegration()]
+});
+```
+
+### Vite configuration
+
+You can extend Vite configuration within `astro.config.mjs`:
+
+```javascript
+export default defineConfig({
+  vite: {
+    plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        // Custom Rollup options
+      }
+    },
+    server: {
+      port: 3000 // Custom dev server port
+    }
+  }
+});
+```
+
+<Tip>
+Refer to the [Vite configuration docs](https://vitejs.dev/config/) for all available options.
+</Tip>

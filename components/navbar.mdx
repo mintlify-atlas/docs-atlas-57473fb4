@@ -1,0 +1,117 @@
+---
+title: Navbar component
+description: Fixed navigation bar with logo and navigation links
+---
+
+## Overview
+
+The Navbar component provides a fixed, translucent navigation bar at the top of your pages. It features a backdrop blur effect, the Velaria horizontal logo, and navigation links with hover effects. The navbar remains fixed at the top during scrolling for consistent navigation access.
+
+## Component code
+
+```astro
+---
+import { Image } from "astro:assets";
+---
+
+<nav class="nav">
+    <div class="nav-container">
+        <div class="logo">
+            <a href="/">
+              <Image 
+                loading="eager" 
+                src={'https://qzvv9kr0sph7bvqi.public.blob.vercel-storage.com/velariaHorizontalLight.png'} 
+                width={150} 
+                height={100} 
+                alt={'Logo'} 
+              />
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">INICIO</a></li>
+            <li><a href="/nosotros">NOSOTROS</a></li>
+        </ul>
+    </div>
+</nav>
+```
+
+## Props
+
+This component does not accept any props. Navigation links are hardcoded within the component.
+
+## Usage example
+
+```astro
+---
+import Navbar from '../components/Navbar.astro';
+---
+
+<Navbar />
+
+<main>
+  <!-- Your page content -->
+</main>
+```
+
+<Note>
+  The Navbar component is typically included in your base layout file so it appears on all pages consistently.
+</Note>
+
+## Styling details
+
+<Accordion title="Fixed positioning and backdrop">
+  The navbar is fixed to the top of the viewport with:
+  - `position: fixed` with `top: 0` and `left: 0`
+  - Full width spanning the entire viewport
+  - `z-index: 1000` to ensure it stays above other content
+  - `backdrop-filter: blur(8px)` creates a frosted glass effect
+  - Semi-transparent black background (`rgba(0, 0, 0, 0.43)`) for visibility while maintaining translucency
+</Accordion>
+
+<Accordion title="Layout structure">
+  - Container with max-width of 1200px, centered with auto margins
+  - Flexbox layout with space-between justification
+  - Logo on the left, navigation links on the right
+  - All items vertically centered
+</Accordion>
+
+<Accordion title="Navigation links">
+  - 13px font size with 500 font weight
+  - White text color for contrast
+  - 1.5rem gap between links
+  - Smooth color transition (0.3s) on hover
+  - Golden yellow (`#ffd700`) hover color
+</Accordion>
+
+<Accordion title="Logo styling">
+  - Image dimensions: 150px width, 100px height
+  - Wrapped in anchor tag linking to homepage
+  - Eager loading for immediate visibility
+</Accordion>
+
+<Tip>
+  You can adjust the backdrop blur intensity by changing the `blur(8px)` value in the `.nav` style. Increase for more blur, decrease for sharper background visibility.
+</Tip>
+
+<Warning>
+  If you add more navigation links, ensure they fit comfortably on mobile screens. Consider implementing a hamburger menu for responsive design if the link count grows.
+</Warning>
+
+## Navigation structure
+
+The navbar currently includes two main navigation links:
+
+1. **INICIO** (`/`) - Homepage link
+2. **NOSOTROS** (`/nosotros`) - About page link
+
+<Note>
+  There's a commented-out contact link in the source code that you can uncomment if needed:
+  ```html
+  <!-- <li><a href="#contact">CONTACTO</a></li> -->
+  ```
+</Note>
+
+## Dependencies
+
+- **astro:assets**: Used for the `Image` component to optimize the logo image
+- **Vercel Blob Storage**: Hosts the Velaria horizontal logo image

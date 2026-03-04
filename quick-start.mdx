@@ -1,0 +1,372 @@
+---
+title: Quick start
+description: Get Velaria up and running locally in minutes
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v18 or higher recommended)
+- **pnpm** package manager
+- **Git** for version control
+
+<Note>
+  While npm and yarn will work, this project uses pnpm for dependency management. Install it globally with `npm install -g pnpm` if needed.
+</Note>
+
+## Installation
+
+Follow these steps to set up Velaria on your local machine:
+
+<Steps>
+  <Step title="Clone the repository">
+    Clone the Velaria source code to your local machine:
+    
+    ```bash
+    git clone <repository-url>
+    cd velas-aromaticas
+    ```
+    
+    <Tip>
+      The project directory is named `velas-aromaticas` as specified in package.json.
+    </Tip>
+  </Step>
+
+  <Step title="Install dependencies">
+    Install all required packages using pnpm:
+    
+    ```bash
+    pnpm install
+    ```
+    
+    This will install:
+    - Astro 5.16.6 and Vercel adapter
+    - Tailwind CSS 4.1.13 with animation plugins
+    - SweetAlert2 for notifications
+    - All other dependencies listed in package.json
+    
+    <Note>
+      The installation creates a `pnpm-lock.yaml` file to ensure consistent dependency versions across environments.
+    </Note>
+  </Step>
+
+  <Step title="Start the development server">
+    Launch the Astro development server:
+    
+    ```bash
+    pnpm dev
+    ```
+    
+    The development server will start at `http://localhost:4321`.
+    
+    <Tip>
+      The dev server includes hot module replacement (HMR) - changes to components will reflect immediately without a full page reload.
+    </Tip>
+  </Step>
+
+  <Step title="Open in your browser">
+    Navigate to `http://localhost:4321` to see Velaria running locally.
+    
+    You should see the homepage with:
+    - Hero header with parallax effect
+    - Product catalog with animated reveals
+    - Fragrances section
+    - Contact form
+    - WhatsApp integration
+  </Step>
+</Steps>
+
+## Available commands
+
+All commands are run from the root of the project:
+
+| Command | Action | Description |
+| :--- | :--- | :--- |
+| `pnpm install` | Installs dependencies | Required before first run |
+| `pnpm dev` | Starts local dev server | Runs at `localhost:4321` with HMR |
+| `pnpm build` | Build production site | Outputs to `./dist/` directory |
+| `pnpm preview` | Preview build locally | Test production build before deploying |
+| `pnpm astro` | Run Astro CLI | Use for commands like `astro add`, `astro check` |
+
+<Warning>
+  The `pnpm build` command requires the Vercel adapter since the project is configured with `output: 'server'` for SSR.
+</Warning>
+
+## Project structure
+
+Once installed, your Velaria project contains:
+
+```
+velas-aromaticas/
+├── .git/                    # Git repository
+├── .vscode/                 # VS Code configuration
+│   ├── extensions.json      # Recommended extensions
+│   └── launch.json          # Debug configuration
+├── public/                  # Static assets
+│   └── favicon.svg
+├── src/
+│   ├── assets/              # Images and static resources
+│   │   ├── images/
+│   │   │   ├── bolitas.jpg
+│   │   │   └── header2.png
+│   │   ├── astro.svg
+│   │   └── background.svg
+│   ├── components/          # Reusable Astro components
+│   │   ├── Catalogo.astro       # Product catalog grid
+│   │   ├── Contactanos.astro    # Contact form
+│   │   ├── Footer.astro         # Site footer
+│   │   ├── Fragancias.astro     # Available fragrances
+│   │   ├── Header.astro         # Hero header with parallax
+│   │   ├── Intro.astro          # Introduction section
+│   │   ├── Navbar.astro         # Navigation bar
+│   │   ├── Producto.astro       # Product showcase
+│   │   ├── ScrollToTop.astro    # Scroll to top button
+│   │   ├── Usos.astro           # Usage information
+│   │   └── Whatsapp.astro       # WhatsApp contact button
+│   ├── layouts/
+│   │   └── Layout.astro         # Base layout with nav/footer
+│   ├── pages/               # Route pages (file-based routing)
+│   │   ├── api/             # API endpoints
+│   │   │   ├── contact.ts       # Contact form handler
+│   │   │   └── contact-email.ts # Email sending logic
+│   │   ├── index.astro          # Homepage
+│   │   ├── nosotros.astro       # About page
+│   │   └── terminos-condiciones.astro  # Terms & conditions
+│   └── styles/
+│       └── global.css           # Global styles with Tailwind
+├── astro.config.mjs         # Astro configuration
+├── package.json             # Project metadata and scripts
+├── pnpm-lock.yaml          # Locked dependency versions
+└── tsconfig.json           # TypeScript configuration
+```
+
+## Explore key components
+
+Now that you have Velaria running, explore these key areas:
+
+### Homepage structure
+
+The homepage (src/pages/index.astro) is composed of multiple components:
+
+```astro src/pages/index.astro
+<Layout title="VELARIA | Inicio">
+  <Header title="ILUMINA TUS MOMENTOS MÁS ESPECIALES" 
+          subtitle="VELAS AROMÁTICAS DECORATIVAS ARTESANALES" />
+  <Intro />
+  <Producto />
+  <Catalogo />
+  <Fragancias />
+  <Usos />
+  <Contactanos />
+  <ScrollToTop/>
+</Layout>
+```
+
+### Product catalog
+
+The Catalogo component (src/components/Catalogo.astro) displays products in a responsive grid:
+
+<CodeGroup>
+```astro Component structure
+<div class="bg-white">
+  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 
+              lg:max-w-7xl lg:px-8">
+    <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 
+                lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+      <!-- Product cards with intersection animations -->
+    </div>
+  </div>
+</div>
+```
+
+```astro Product card with animation
+<div class="group scale-50 opacity-0 intersect:scale-100 
+            intersect:opacity-100 transition duration-500">
+  <Image
+    src={'...'}
+    width={'200'}
+    height={'300'}
+    alt="..."
+    class="aspect-square w-full rounded-lg bg-gray-200 
+           object-cover xl:aspect-7/8"
+  />
+  <h3 class="mt-4 text-sm text-gray-700">Bubbles (chico)</h3>
+  <p class="mt-1 text-lg font-medium text-gray-900">$20.00 mxn</p>
+</div>
+```
+</CodeGroup>
+
+### Fragrances list
+
+The Fragancias component (src/components/Fragancias.astro) displays available scents:
+
+```astro src/components/Fragancias.astro
+<div class="flex flex-col justify-center items-center 
+            intersect:animate-fade-up animate-once 
+            animate-duration-[1000ms] animate-ease-in my-20">
+  <div class="w-[80%] lg:w-[50%]">
+    <h2 class="text-center text-3xl mb-10">Fragancias disponibles</h2>
+    <ul>
+      <li class="mb-5 text-2xl text-orange-900 text-center italic">
+        Vainilla
+      </li>
+      <li class="mb-5 text-2xl text-orange-900 text-center italic">
+        Pino
+      </li>
+      <li class="mb-5 text-2xl text-orange-900 text-center italic">
+        Sándalo
+      </li>
+      <li class="mb-5 text-2xl text-orange-900 text-center italic">
+        Canela
+      </li>
+      <li class="mb-5 text-2xl text-orange-900 text-center italic">
+        Lavanda
+      </li>
+    </ul>
+    <p class="text-center text-lg mt-10">
+      Si deseas alguna fragancia que no se encuentre aquí 
+      nosotros la conseguimos
+    </p>
+  </div>
+</div>
+```
+
+### Contact form
+
+The Contactanos component (src/components/Contactanos.astro) includes form validation and API integration:
+
+<CodeGroup>
+```astro Form structure
+<form id="contact-form" class="mx-auto mt-16 max-w-xl sm:mt-20">
+  <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+    <!-- Name field -->
+    <div>
+      <label for="name" class="block text-sm/6 font-semibold text-black">
+        Nombre
+      </label>
+      <input id="name" type="text" name="name" 
+             autocomplete="given-name" placeholder="Nombre" />
+    </div>
+    
+    <!-- Last name field -->
+    <div>
+      <label for="lastName" class="block text-sm/6 font-semibold text-black">
+        Apellidos
+      </label>
+      <input id="lastName" type="text" name="lastName" 
+             autocomplete="family-name" placeholder="Apellidos" />
+    </div>
+    
+    <!-- Email, phone, message fields... -->
+  </div>
+  
+  <button id="btn-submit" type="submit">
+    Enviar
+  </button>
+</form>
+```
+
+```typescript Form submission handler
+const form = document.getElementById("contact-form");
+const btn = document.getElementById('btn-submit');
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  
+  btn.setAttribute('disabled', 'true');
+  btn.innerHTML = 'Enviando...';
+  
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+  
+  const res = await fetch("/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  
+  if (res.ok) {
+    Swal.fire({
+      title: "Gracias por tu mensaje",
+      text: "Nos pondrémos en contacto contigo",
+      icon: "success"
+    });
+    form.reset();
+  }
+});
+```
+</CodeGroup>
+
+## Development workflow
+
+Here's a typical development workflow:
+
+<Steps>
+  <Step title="Make changes">
+    Edit component files in `src/components/` or pages in `src/pages/`.
+    
+    The dev server will automatically reload your changes thanks to HMR.
+  </Step>
+
+  <Step title="Test locally">
+    Verify your changes in the browser at `localhost:4321`.
+    
+    Check:
+    - Animations work correctly
+    - Form submissions (requires API configuration)
+    - Responsive design on different screen sizes
+    - WhatsApp integration
+  </Step>
+
+  <Step title="Build for production">
+    Test the production build locally:
+    
+    ```bash
+    pnpm build
+    pnpm preview
+    ```
+    
+    This ensures SSR works correctly and catches any build-time errors.
+  </Step>
+
+  <Step title="Deploy to Vercel">
+    Push your changes to trigger automatic deployment:
+    
+    ```bash
+    git add .
+    git commit -m "Your changes"
+    git push
+    ```
+    
+    Vercel will automatically build and deploy your changes.
+  </Step>
+</Steps>
+
+<Tip>
+  Use `pnpm astro check` to run TypeScript type checking and catch potential issues before deployment.
+</Tip>
+
+## Next steps
+
+Now that you have Velaria running locally, explore these topics:
+
+<Card title="Components" icon="cube" href="/components/header">
+  Deep dive into each component: Header, Catalogo, Fragancias, Contactanos, and more.
+</Card>
+
+<Card title="Styling" icon="palette" href="/features/animations">
+  Learn about the Tailwind CSS setup, custom animations, and responsive design.
+</Card>
+
+<Card title="API routes" icon="code" href="/api/overview">
+  Understand the contact form API endpoint and email integration at src/pages/api/contact.ts.
+</Card>
+
+<Card title="Deployment" icon="rocket" href="/deployment/vercel">
+  Configure Vercel deployment, environment variables, and production optimizations.
+</Card>
+
+<Warning>
+  The contact form requires API configuration to send emails. You'll need to set up the email service endpoint referenced in src/pages/api/contact.ts:18.
+</Warning>

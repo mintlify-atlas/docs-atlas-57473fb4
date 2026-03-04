@@ -1,0 +1,165 @@
+---
+title: API overview
+description: Learn how to use the Velaria API endpoints built with Astro
+---
+
+## Introduction
+
+Velaria uses Astro API routes to handle server-side functionality. These endpoints are built using Astro's file-based routing system and provide RESTful interfaces for client-server communication.
+
+<Note>
+  All API routes are server-side rendered (SSR) and use `export const prerender = false` to ensure dynamic handling of requests.
+</Note>
+
+## Available endpoints
+
+The Velaria API currently provides the following endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/contact` | POST | Submit contact form data and send email notifications |
+
+## How Astro API routes work
+
+Astro API routes are defined in the `src/pages/api/` directory. Each file exports HTTP method handlers (GET, POST, PUT, DELETE, etc.) that process requests and return responses.
+
+### Basic structure
+
+```typescript
+import type { APIRoute } from "astro";
+
+export const POST: APIRoute = async ({ request }) => {
+  const body = await request.json();
+  
+  // Process the request
+  
+  return new Response(
+    JSON.stringify({ success: true }),
+    { status: 200 }
+  );
+};
+```
+
+## Response format
+
+All API endpoints return JSON responses with a consistent structure:
+
+<ResponseField name="success" type="boolean" required>
+  Indicates whether the request was processed successfully
+</ResponseField>
+
+<ResponseField name="msg" type="string" required>
+  A message describing the result or error
+</ResponseField>
+
+### Success response
+
+```json
+{
+  "success": true,
+  "msg": "Mensaje recibido"
+}
+```
+
+### Error response
+
+```json
+{
+  "success": false,
+  "msg": "Por favor, llena el formulario"
+}
+```
+
+## Status codes
+
+The API uses standard HTTP status codes:
+
+- **200**: Success - Request processed successfully
+- **500**: Server Error - Validation failed or processing error occurred
+
+<Warning>
+  Currently, validation errors return a 500 status code. In a production environment, consider using 400 (Bad Request) for client-side validation errors.
+</Warning>
+
+## Authentication and security
+
+<Note>
+  The current API endpoints do not require authentication. All endpoints are publicly accessible.
+</Note>
+
+### Security considerations
+
+- **CORS**: Endpoints are accessible from the same origin by default
+- **Rate limiting**: Not currently implemented
+- **Input validation**: Server-side validation is performed on all inputs
+- **Email validation**: Uses regex pattern `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`
+
+<Tip>
+  For production deployments, consider implementing rate limiting to prevent abuse and adding authentication for sensitive endpoints.
+</Tip>
+
+## Error handling
+
+All endpoints use try-catch blocks to handle errors gracefully. When an error occurs:
+
+1. The error is logged to the console
+2. A JSON response is returned with `success: false`
+3. An appropriate status code is set (typically 500)
+4. A user-friendly error message is provided in the `msg` field
+
+## External integrations
+
+The Velaria API integrates with external services:
+
+- **Email API**: `https://email-api-bj45.vercel.app/api/mail/contact` - Used to send contact form submissions via email
+
+<Warning>
+  Ensure the external email API is available and properly configured. If the email service is down, contact form submissions will fail.
+</Warning>
+
+## Making requests
+
+To interact with the API, make HTTP requests from your client-side code:
+
+<CodeGroup>
+
+```javascript JavaScript (Fetch)
+const response = await fetch('/api/contact', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    phone: '1234567890',
+    message: 'I would like to order custom candles'
+  })
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+```javascript JavaScript (Axios)
+import axios from 'axios';
+
+const { data } = await axios.post('/api/contact', {
+  name: 'John',
+  lastName: 'Doe',
+  email: 'john.doe@example.com',
+  phone: '1234567890',
+  message: 'I would like to order custom candles'
+});
+
+console.log(data);
+```
+
+</CodeGroup>
+
+## Next steps
+
+<Card title="Contact endpoint" icon="envelope" href="/api/contact-endpoint">
+  Learn how to submit contact form data
+</Card>

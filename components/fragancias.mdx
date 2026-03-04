@@ -1,0 +1,144 @@
+---
+title: Fragancias component
+description: Available fragrance list with animation and custom request information
+---
+
+## Overview
+
+The Fragancias component displays a list of available candle fragrances in an elegant, centered layout. It features fade-up animations triggered by intersection observers and includes a message encouraging customers to request custom fragrances not listed.
+
+## Component code
+
+```astro
+<div class="flex flex-col justify-center items-center intersect:animate-fade-up animate-once animate-duration-[1000ms] animate-ease-in my-20">
+    <div class="w-[80%] lg:w-[50%]">
+        <div>
+            <h2 class="text-center text-3xl mb-10">Fragancias disponibles</h2>
+
+            <ul>
+                <li class="mb-5 text-2xl text-orange-900 text-center italic">Vainilla</li>
+                <li class="mb-5 text-2xl text-orange-900 text-center italic">Pino</li>
+                <li class="mb-5 text-2xl text-orange-900 text-center italic">Sándalo</li>
+                <li class="mb-5 text-2xl text-orange-900 text-center italic">Canela</li>
+                <li class="mb-5 text-2xl text-orange-900 text-center italic">Lavanda</li>
+            </ul>
+
+            <p class="text-center text-lg mt-10">
+                Si deseas alguna fragancia que no se encuentre aquí nosotros la conseguimos
+            </p>
+        </div>
+    </div>
+</div>
+```
+
+## Props
+
+This component does not accept any props. All fragrances are hardcoded within the component.
+
+## Usage example
+
+```astro
+---
+import Fragancias from '../components/Fragancias.astro';
+---
+
+<section>
+  <Fragancias />
+</section>
+```
+
+## Available fragrances
+
+The component currently lists five fragrances:
+
+1. **Vainilla** (Vanilla)
+2. **Pino** (Pine)
+3. **Sándalo** (Sandalwood)
+4. **Canela** (Cinnamon)
+5. **Lavanda** (Lavender)
+
+<Note>
+  The component includes a message informing customers that custom fragrances can be sourced upon request: "Si deseas alguna fragancia que no se encuentre aquí nosotros la conseguimos"
+</Note>
+
+## Styling details
+
+<Accordion title="Container layout">
+  The component uses a centered flexbox layout:
+  - Outer container: Full width with flex column, centered horizontally and vertically
+  - Inner container: 80% width on mobile, 50% width on large screens (lg breakpoint)
+  - Top and bottom margin: 5rem (my-20) for vertical spacing
+</Accordion>
+
+<Accordion title="Typography">
+  - **Heading**: 3xl text size (1.875rem), centered, 2.5rem bottom margin
+  - **Fragrance items**: 2xl text size (1.5rem), orange-900 color, centered, italic style
+  - **Bottom message**: lg text size (1.125rem), centered, 2.5rem top margin
+  - **Item spacing**: 1.25rem bottom margin (mb-5) between each fragrance
+</Accordion>
+
+<Accordion title="Animation">
+  The entire component animates into view using intersection observers:
+  
+  ```css
+  intersect:animate-fade-up animate-once animate-duration-[1000ms] animate-ease-in
+  ```
+  
+  - **Animation type**: Fade-up (slides up while fading in)
+  - **Duration**: 1000ms (1 second)
+  - **Timing**: Ease-in function
+  - **Frequency**: Once only (doesn't repeat when scrolling back)
+  - **Trigger**: When component enters viewport
+</Accordion>
+
+<Accordion title="Color scheme">
+  The component uses warm, earthy tones:
+  - Fragrance text: `text-orange-900` (#7c2d12)
+  - Heading and message: Default black text
+  - Background: Inherits from parent (typically white)
+</Accordion>
+
+<Accordion title="Responsive behavior">
+  The component adapts to screen size:
+  - **Mobile**: Container uses 80% of viewport width
+  - **Large screens (lg)**: Container reduces to 50% of viewport width for better readability
+  - All text remains centered across all breakpoints
+</Accordion>
+
+<Tip>
+  The italic styling on fragrance names adds an elegant, sophisticated touch that matches the handcrafted aesthetic of the candle brand.
+</Tip>
+
+<Tip>
+  You can easily add more fragrances by duplicating the list item structure and maintaining the same classes for consistent styling.
+</Tip>
+
+## Content structure
+
+<ParamField path="Heading" type="text">
+  "Fragancias disponibles" - Introduces the fragrance list
+</ParamField>
+
+<ParamField path="Fragrance list" type="unordered list">
+  Displays available fragrances in a vertical list with consistent spacing and styling
+</ParamField>
+
+<ParamField path="Custom request message" type="text">
+  Informs customers that unlisted fragrances can be sourced on request
+</ParamField>
+
+## Best practices
+
+<Warning>
+  When adding new fragrances to the list, maintain the same class structure to ensure consistent styling and spacing throughout the component.
+</Warning>
+
+<Note>
+  The component's animation is set to `animate-once`, meaning it only plays when first entering the viewport. This prevents distracting repeated animations as users scroll up and down the page.
+</Note>
+
+## Dependencies
+
+- **Tailwind CSS**: Flexbox utilities, responsive design, typography, and spacing
+- **Intersection Observer API**: Powers the `intersect:` animation trigger
+- **Tailwind Animate Plugin**: Provides the `animate-fade-up` animation utility

@@ -1,97 +1,219 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Velaria Documentation"
+description: "Complete guide to the Velaria website - handcrafted aromatic candles"
+mode: "custom"
 ---
 
-## Setting up
+<div className="relative bg-[#FFF9E6] dark:bg-[#0f1117] overflow-hidden">
+  <div className="absolute inset-0 bg-gradient-to-br from-[#B36B2B]/10 to-transparent dark:from-[#B36B2B]/5"></div>
+  <div className="relative max-w-7xl mx-auto px-6 sm:px-8 py-20 lg:py-24">
+    <div className="text-center">
+      <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-[#3B2A1A] dark:text-gray-100 mb-6">
+        Velaria Documentation
+      </h1>
+      <p className="text-lg sm:text-xl text-[#3B2A1A]/80 dark:text-gray-400 max-w-3xl mx-auto mb-10">
+        Complete developer guide for the Velaria website — a beautiful platform showcasing handcrafted decorative aromatic candles with server-side rendering, animations, and seamless integrations.
+      </p>
+      <div className="flex flex-wrap justify-center gap-4">
+        <a
+          href="/quick-start"
+          className="inline-flex items-center px-8 py-3.5 rounded-lg bg-[#B36B2B] hover:bg-[#8B5422] text-white font-semibold transition-colors no-underline"
+        >
+          Get Started
+          <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+        <a
+          href="/structure/overview"
+          className="inline-flex items-center px-8 py-3.5 rounded-lg border-2 border-[#B36B2B] bg-transparent hover:bg-[#B36B2B]/10 dark:hover:bg-[#B36B2B]/20 text-[#B36B2B] dark:text-[#B36B2B] font-semibold transition-colors no-underline"
+        >
+          Project Structure
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 
-Get your documentation site up and running in minutes.
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="text-center mb-12">
+    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Quick start</h2>
+    <p className="text-base text-gray-600 dark:text-gray-400">Get up and running with the Velaria project in minutes</p>
+  </div>
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+  <Steps>
+    <Step title="Clone the repository">
+      Start by cloning the Velaria repository from GitHub to your local machine.
 
-## Make it yours
+      ```bash
+      git clone https://github.com/ElvicMC41/VELARIA.git
+      cd VELARIA
+      ```
+    </Step>
 
-Design a docs site that looks great and empowers your users.
+    <Step title="Install dependencies">
+      The project uses pnpm as the package manager. Install all required dependencies:
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
+      ```bash
+      pnpm install
+      ```
+
+      <Note>Make sure you have Node.js and pnpm installed on your system before running this command.</Note>
+    </Step>
+
+    <Step title="Start the development server">
+      Run the Astro development server to preview the site locally:
+
+      ```bash
+      pnpm dev
+      ```
+
+      The site will be available at `http://localhost:4321`
+    </Step>
+
+    <Step title="Explore the components">
+      Navigate through the source code to understand the component structure. Key components include:
+      - **Catalogo** - Product catalog grid with animations
+      - **Fragancias** - Available fragrances display
+      - **Contactanos** - Contact form with email integration
+      - **Whatsapp** - WhatsApp floating button
+
+      <Tip>Check out the [Components](/components/catalogo) section for detailed documentation on each component.</Tip>
+    </Step>
+  </Steps>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="text-center mb-12">
+    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Explore by topic</h2>
+    <p className="text-base text-gray-600 dark:text-gray-400">Deep dive into specific areas of the Velaria project</p>
+  </div>
+
+  <CardGroup cols={2}>
     <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+      title="Project Structure"
+      icon="folder-tree"
+      href="/structure/overview"
+    >
+      Understand the Astro-based architecture, file organization, and how components, pages, and layouts work together.
+    </Card>
+    <Card
+      title="Product Catalog"
+      icon="grid"
+      href="/features/product-catalog"
+    >
+      Learn about the animated product catalog featuring candle designs like Bubbles, Geometric, Spiral, and Rosa.
+    </Card>
+    <Card
+      title="Contact Form API"
+      icon="envelope"
+      href="/api/contact-endpoint"
+    >
+      Explore the server-side contact form endpoint with validation and email integration.
+    </Card>
+    <Card
+      title="Animations"
+      icon="sparkles"
+      href="/features/animations"
+    >
+      Discover the scroll animations, intersection observer effects, and Tailwind CSS animated classes.
+    </Card>
+    <Card
+      title="Components Reference"
+      icon="puzzle-piece"
+      href="/components/header"
+    >
+      Complete reference for all Astro components including Header, Navbar, Catalogo, Fragancias, and more.
+    </Card>
+    <Card
+      title="Vercel Deployment"
+      icon="rocket"
+      href="/deployment/vercel"
+    >
+      Deploy your Velaria site to Vercel with server-side rendering and edge functions.
+    </Card>
+  </CardGroup>
+</div>
 
-## Create beautiful pages
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="text-center mb-12">
+    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Key features</h2>
+    <p className="text-base text-gray-600 dark:text-gray-400">What makes Velaria special</p>
+  </div>
 
-Everything you need to create world-class documentation.
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="p-6 rounded-2xl border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#1a1d27] hover:border-[#B36B2B] dark:hover:border-[#B36B2B] transition-colors">
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#B36B2B]/10 dark:bg-[#B36B2B]/20 flex items-center justify-center">
+          <svg className="w-5 h-5 text-[#B36B2B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Product Catalog</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Animated grid showcasing 10+ candle designs with hover effects and intersection observer animations.</p>
+        </div>
+      </div>
+    </div>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+    <div className="p-6 rounded-2xl border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#1a1d27] hover:border-[#B36B2B] dark:hover:border-[#B36B2B] transition-colors">
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#B36B2B]/10 dark:bg-[#B36B2B]/20 flex items-center justify-center">
+          <svg className="w-5 h-5 text-[#B36B2B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Server-Side Rendering</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Built with Astro's server output mode and Vercel adapter for optimal performance.</p>
+        </div>
+      </div>
+    </div>
 
-## Need inspiration?
+    <div className="p-6 rounded-2xl border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#1a1d27] hover:border-[#B36B2B] dark:hover:border-[#B36B2B] transition-colors">
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#B36B2B]/10 dark:bg-[#B36B2B]/20 flex items-center justify-center">
+          <svg className="w-5 h-5 text-[#B36B2B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Contact Integration</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Form validation with server-side API endpoint and external email service integration.</p>
+        </div>
+      </div>
+    </div>
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+    <div className="p-6 rounded-2xl border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#1a1d27] hover:border-[#B36B2B] dark:hover:border-[#B36B2B] transition-colors">
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#B36B2B]/10 dark:bg-[#B36B2B]/20 flex items-center justify-center">
+          <svg className="w-5 h-5 text-[#B36B2B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Responsive Design</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Tailwind CSS v4 with custom animations and mobile-first responsive layouts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="mt-20 mb-16 max-w-5xl mx-auto px-6">
+  <div className="rounded-2xl border-2 border-[#B36B2B] bg-gradient-to-br from-[#FFF9E6] to-white dark:from-[#1a1d27] dark:to-[#0f1117] p-10 text-center">
+    <h2 className="text-3xl font-bold text-[#3B2A1A] dark:text-white mb-4">Ready to build?</h2>
+    <p className="text-lg text-[#3B2A1A]/80 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+      Start exploring the Velaria codebase and learn how to customize and extend this beautiful candle e-commerce platform.
+    </p>
+    <a
+      href="/quick-start"
+      className="inline-flex items-center px-8 py-3.5 rounded-lg bg-[#B36B2B] hover:bg-[#8B5422] text-white font-semibold transition-colors no-underline"
+    >
+      Get Started Now
+      <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+      </svg>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,308 @@
+---
+title: Components
+description: Overview of all Astro components in the Velaria project, their purpose, and structure
+---
+
+Components are reusable building blocks in Astro. The Velaria project contains 11 components in `src/components/` that make up the website's UI.
+
+## Component overview
+
+All components are Astro files (`.astro`) that combine HTML, CSS, and JavaScript:
+
+```
+src/components/
+├── Catalogo.astro        (6.6 KB)
+├── Contactanos.astro     (6.8 KB)
+├── Footer.astro          (1.2 KB)
+├── Fragancias.astro      (926 B)
+├── Header.astro          (1.7 KB)
+├── Intro.astro           (713 B)
+├── Navbar.astro          (1.4 KB)
+├── Producto.astro        (9.5 KB)
+├── ScrollToTop.astro     (770 B)
+├── Usos.astro            (2.9 KB)
+└── Whatsapp.astro        (1.4 KB)
+```
+
+## Core components
+
+### Navbar.astro
+
+`src/components/Navbar.astro`
+
+Fixed navigation bar at the top of every page with logo and menu links.
+
+```astro
+---
+import { Image } from "astro:assets";
+---
+
+<nav class="nav">
+    <div class="nav-container">
+        <div class="logo">
+            <a href="/"><Image loading="eager" src={'...'} width={150} height={100} alt={'Logo'} /></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">INICIO</a></li>
+            <li><a href="/nosotros">NOSOTROS</a></li>
+        </ul>
+    </div>
+</nav>
+```
+
+<Note>
+The navbar uses a fixed position with backdrop blur effect for a modern glassmorphism look.
+</Note>
+
+**Features:**
+- Fixed positioning (stays visible on scroll)
+- Backdrop blur effect
+- Responsive design
+- Logo with external image hosting
+
+### Header.astro
+
+`src/components/Header.astro`
+
+Hero section with full-screen background image and title text.
+
+```astro
+---
+import { Image } from "astro:assets";
+
+const { title, subtitle } = Astro.props;
+---
+
+<header class="main-header header">
+    <div class="header-overlay main-content"></div>
+    <div class="header-content">
+       <Image loading="eager" class="m-auto pb-3 animate-fade-up..." 
+              src={'...'} width={100} height={200} alt="candle-icon" width={200} />
+        <h1 class="animate-delay-500 animate-fade-up">{title}</h1>
+        <p class="animate-fade-up animate-delay-600">{subtitle}</p>
+    </div>
+</header>
+```
+
+**Props:**
+- `title` (string) - Main heading text
+- `subtitle` (string) - Subheading text
+
+**Features:**
+- Parallax background effect (controlled via Layout script)
+- Fade-up animations with staggered delays
+- Full viewport height (100vh)
+- Dark overlay for text readability
+
+<Tip>
+The parallax effect is implemented in `Layout.astro` and moves the background at 0.3x scroll speed.
+</Tip>
+
+### Footer.astro
+
+`src/components/Footer.astro`
+
+Site footer with branding and navigation links.
+
+```astro
+<footer class="shadow-sm dark:bg-yellow-950 bg-orange-100 m-0">
+    <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+        <div class="sm:flex sm:items-center sm:justify-between">
+            <a href="https://flowbite.com/" class="flex items-center mb-4 sm:mb-0...">
+                <span class="self-center text-2xl font-semibold...">VELARIA</span>
+            </a>
+            <ul class="flex flex-wrap items-center mb-6 text-sm...">
+                <li>
+                    <a href="/nosotros" class="hover:underline me-4 md:me-6">NOSOTROS</a>
+                </li>
+            </ul>
+        </div>
+        <hr class="my-6 border-amber-800..." />
+        <span class="block text-sm...">© 2025 VELARIA. Sitio web desarrollado por DevelopCrew</span>
+    </div>
+</footer>
+```
+
+**Features:**
+- Responsive flexbox layout
+- Dark mode support
+- Copyright notice
+- Developer credit
+
+## Content components
+
+### Intro.astro
+
+`src/components/Intro.astro`
+
+Brief introduction section about the brand.
+
+<Accordion title="Purpose">
+Displays the first content section visitors see after the hero header, introducing Velaria's mission.
+</Accordion>
+
+### Producto.astro
+
+`src/components/Producto.astro`
+
+Showcases the main candle product with detailed information.
+
+**File size:** 9.5 KB (largest component)
+
+<Note>
+This is the largest component, likely containing product images, descriptions, and interactive elements.
+</Note>
+
+### Catalogo.astro
+
+`src/components/Catalogo.astro`
+
+Displays the product catalog or collection gallery.
+
+**File size:** 6.6 KB
+
+### Fragancias.astro
+
+`src/components/Fragancias.astro`
+
+Presents available fragrance options for candles.
+
+### Usos.astro
+
+`src/components/Usos.astro`
+
+Explains different uses and benefits of the candles.
+
+**File size:** 2.9 KB
+
+### Contactanos.astro
+
+`src/components/Contactanos.astro`
+
+Contact form section for customer inquiries.
+
+**File size:** 6.8 KB
+
+<Warning>
+This component includes form handling logic and connects to the `/api/contact` endpoint.
+</Warning>
+
+## Utility components
+
+### ScrollToTop.astro
+
+`src/components/ScrollToTop.astro`
+
+Floating button that scrolls the page back to the top.
+
+**Features:**
+- Appears after scrolling 20px
+- Smooth scroll animation
+- Hidden by default
+- Controlled by script in `Layout.astro`
+
+**Implementation in Layout:**
+
+```javascript
+const mybutton = document.getElementById("btn-back-to-top");
+
+const scrollFunction = () => {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.classList.remove("hidden");
+  } else {
+    mybutton.classList.add("hidden");
+  }
+};
+
+const backToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+mybutton.addEventListener("click", backToTop);
+window.addEventListener("scroll", scrollFunction);
+```
+
+### Whatsapp.astro
+
+`src/components/Whatsapp.astro`
+
+Floating WhatsApp contact button.
+
+**Features:**
+- Dynamic phone number based on time of day
+- Implemented in `Layout.astro` script:
+
+```javascript
+const fecha = new Date();
+const hora = fecha.getHours();
+
+if(hora > 12){
+  let whatsapp = document.getElementById('num-whatsapp');
+  whatsapp?.setAttribute('href', 'https://wa.me/5214777551754')
+}
+```
+
+<Tip>
+The WhatsApp number changes after 12 PM, likely routing to different support representatives based on working hours.
+</Tip>
+
+## Component patterns
+
+All components follow similar patterns:
+
+<Steps>
+
+### Frontmatter section
+
+Imports and prop definitions at the top:
+
+```astro
+---
+import { Image } from "astro:assets";
+const { title, subtitle } = Astro.props;
+---
+```
+
+### Template section
+
+HTML markup in the middle:
+
+```astro
+<div class="container">
+  <h1>{title}</h1>
+</div>
+```
+
+### Style section
+
+Scoped CSS at the bottom:
+
+```astro
+<style>
+  .container {
+    max-width: 1200px;
+  }
+</style>
+```
+
+</Steps>
+
+## Using components
+
+Import and use components in pages:
+
+```astro
+---
+import Header from "../components/Header.astro";
+import Navbar from "../components/Navbar.astro";
+---
+
+<Navbar />
+<Header title="Welcome" subtitle="to Velaria" />
+```
+
+## Next steps
+
+<Card title="Learn about pages" icon="file">
+Discover how components are composed into pages in the [pages documentation](/structure/pages).
+</Card>

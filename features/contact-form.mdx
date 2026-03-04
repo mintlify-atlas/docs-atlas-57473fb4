@@ -1,0 +1,425 @@
+---
+title: Contact form
+description: Learn how the Contactanos component handles customer inquiries with validation and SweetAlert2 notifications
+---
+
+The contact form component allows customers to send messages, request quotes, and ask questions. It includes client-side validation, loading states, and beautiful alert notifications powered by SweetAlert2.
+
+## Component overview
+
+The `Contactanos` component provides a full-featured contact form with:
+- Four input fields (name, last name, email, phone)
+- Message textarea
+- Form validation
+- Loading state during submission
+- Success/error notifications
+- Integration with backend API
+
+**Location:** `src/components/Contactanos.astro`
+
+## Form structure
+
+The form includes five fields:
+
+<Steps>
+  <Step title="Name field">
+    ```astro
+    <input
+      id="name"
+      type="text"
+      name="name"
+      autocomplete="given-name"
+      placeholder="Nombre"
+      class="block w-full rounded-md bg-black/5 px-3.5 py-2 text-base text-black..."
+    />
+    ```
+  </Step>
+  
+  <Step title="Last name field">
+    ```astro
+    <input
+      id="lastName"
+      type="text"
+      name="lastName"
+      autocomplete="family-name"
+      placeholder="Apellidos"
+      class="block w-full rounded-md bg-black/5 px-3.5 py-2..."
+    />
+    ```
+  </Step>
+  
+  <Step title="Email field">
+    ```astro
+    <input
+      id="email"
+      type="email"
+      name="email"
+      autocomplete="email"
+      placeholder="Correo electrónico"
+      class="block w-full rounded-md bg-black/5 px-3.5 py-2..."
+    />
+    ```
+  </Step>
+  
+  <Step title="Phone field">
+    ```astro
+    <input
+      id="phone"
+      type="text"
+      name="phone"
+      placeholder="123-456-7890"
+      class="block min-w-0 grow bg-black/5 py-1.5 pr-3 pl-1..."
+    />
+    ```
+  </Step>
+  
+  <Step title="Message textarea">
+    ```astro
+    <textarea
+      id="message"
+      name="message"
+      rows="4"
+      placeholder="Tu mensaje"
+      class="block w-full rounded-md bg-black/5 px-3.5 py-2..."
+    ></textarea>
+    ```
+  </Step>
+</Steps>
+
+## Form submission handling
+
+The form uses client-side JavaScript to handle submissions asynchronously:
+
+```javascript
+const form = document.getElementById("contact-form");
+const btn = document.getElementById('btn-submit');
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  
+  btn.setAttribute('disabled', 'true');
+  btn.innerHTML = 'Enviando...';
+  
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+  
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    
+    if (res.ok) {
+      Swal.fire({
+        title: "Gracias por tu mensaje",
+        text: "Nos pondrémos en contacto contigo",
+        icon: "success"
+      });
+      form.reset();
+    } else {
+      Swal.fire({
+        title: "UPS",
+        text: "Ocurrió un error, intentalo de nuevo más tarde...",
+        icon: "error"
+      });
+    }
+  } catch (err) {
+    Swal.fire({
+      title: "UPS",
+      text: "Ocurrió un error, por favor, envíanos un mensaje por WhatsApp",
+      icon: "error"
+    });
+  } finally {
+    btn.removeAttribute('disabled');
+    btn.innerHTML = 'Enviar';
+  }
+});
+```
+
+<Note>
+  The form prevents default submission behavior and uses `fetch()` to send data asynchronously, providing a better user experience without page reloads.
+</Note>
+
+## Loading states
+
+The submit button shows visual feedback during form submission:
+
+| State | Button Text | Disabled |
+|-------|-------------|----------|
+| Initial | "Enviar" | No |
+| Submitting | "Enviando..." | Yes |
+| Complete | "Enviar" | No |
+
+```javascript
+// Start loading
+btn.setAttribute('disabled', 'true');
+btn.innerHTML = 'Enviando...';
+
+// End loading
+btn.removeAttribute('disabled');
+btn.innerHTML = 'Enviar';
+```
+
+## SweetAlert2 integration
+
+The component uses SweetAlert2 for beautiful alert notifications:
+
+<Accordion title="Success notification">
+  ```javascript
+  Swal.fire({
+    title: "Gracias por tu mensaje",
+    text: "Nos pondrémos en contacto contigo",
+    icon: "success"
+  });
+  ```
+  Displayed when the message is successfully sent.
+</Accordion>
+
+<Accordion title="Error notification">
+  ```javascript
+  Swal.fire({
+    title: "UPS",
+    text: "Ocurrió un error, intentalo de nuevo más tarde o envíanos un mensaje por WhatsApp",
+    icon: "error"
+  });
+  ```
+  Displayed when there's a network error or server issue.
+</Accordion>
+
+<Tip>
+  SweetAlert2 is imported via npm and bundled with your application:
+  ```bash
+  npm install sweetalert2
+  ```
+</Tip>
+
+## API endpoint integration
+
+The form sends data to the `/api/contact` endpoint:
+
+**Endpoint:** `src/pages/api/contact.ts`
+
+### Request format
+
+```typescript
+POST /api/contact
+Content-Type: application/json
+
+{
+  "name": "Juan",
+  "lastName": "Pérez",
+  "email": "juan@example.com",
+  "phone": "477-123-4567",
+  "message": "Me gustaría cotizar 10 velas Bubbles"
+}
+```
+
+### Server-side validation
+
+The API endpoint performs comprehensive validation:
+
+<Steps>
+  <Step title="Empty field validation">
+    ```typescript
+    if(completeName === "" || email === "" || message === "" || phone === ""){
+      return new Response(
+        JSON.stringify({ success: false, msg: "Por favor, llena el formulario" }),
+        { status: 500 }
+      );
+    }
+    ```
+  </Step>
+  
+  <Step title="Email format validation">
+    ```typescript
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ success: false, msg: "Por favor, ingresa un correo válido" }),
+        { status: 500 }
+      );
+    }
+    ```
+  </Step>
+  
+  <Step title="External email service">
+    ```typescript
+    await fetch("https://email-api-bj45.vercel.app/api/mail/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+    ```
+    The endpoint forwards the data to an external email service.
+  </Step>
+</Steps>
+
+<Warning>
+  The API endpoint uses `export const prerender = false` to enable server-side rendering and form processing. Without this, the API route won't work in production.
+</Warning>
+
+## Complete API endpoint code
+
+<CodeGroup>
+```typescript src/pages/api/contact.ts
+export const prerender = false;
+import type { APIRoute } from "astro";
+
+interface formData {
+  name: String,
+  email: String, 
+  message: String,
+  phone: Number
+}
+
+const sendFormData = (data: formData) => {
+  return new Promise(async(resolve, reject) => {
+    console.log("Informacion enviada a la api: ", data);
+
+    await fetch("https://email-api-bj45.vercel.app/api/mail/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error en la respuesta del servidor");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Éxito:", data);
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      throw error;
+    });
+
+    setTimeout(() => {
+      console.log("Datos enviados:", data);
+      resolve({ status: "success" });
+    }, 1000);
+  });
+}
+
+export const POST: APIRoute = async ({ request }) => {
+  try {
+    const body = await request.json();
+    const { name, email, message, lastName, phone } = body;
+    const completeName = name + ' ' + lastName;
+
+    // Validate fields
+    if(completeName === "" || email === "" || message === "" || phone === ""){
+      return new Response(
+        JSON.stringify({ success: false, msg: "Por favor, llena el formulario" }),
+        { status: 500 }
+      );
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ success: false, msg: "Por favor, ingresa un correo válido" }),
+        { status: 500 }
+      );
+    }
+
+    // Send to email service
+    await sendFormData({name: completeName, email, message, phone})
+
+    return new Response(
+      JSON.stringify({ success: true, msg: "Mensaje recibido" }),
+      { status: 200}
+    );
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ success: false, msg: "Error procesando el mensaje" }),
+      { status: 500 }
+    );
+  }
+};
+```
+</CodeGroup>
+
+## Layout and styling
+
+The form is wrapped in a centered container with amber background:
+
+```astro
+<div class="isolate bg-amber-50 px-6 py-24 sm:py-22 lg:px-8 flex justify-center">
+  <div class="bg-white w-[100%] lg:w-[50%] p-5 rounded-lg">
+    <!-- Form content -->
+  </div>
+</div>
+```
+
+### Responsive width
+
+| Breakpoint | Form Width |
+|------------|------------|
+| Mobile | 100% |
+| Large (lg) | 50% |
+
+### Input styling
+
+All form inputs use consistent styling:
+
+```css
+block w-full rounded-md bg-black/5 px-3.5 py-2 text-base text-black
+outline-1 -outline-offset-1 outline-white/10
+placeholder:text-gray-500
+focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500
+```
+
+- Semi-transparent black background (5% opacity)
+- Indigo outline on focus
+- Gray placeholder text
+- Rounded corners
+
+## WhatsApp fallback
+
+The component includes a `<Whatsapp />` component for alternative contact:
+
+```astro
+---
+import Whatsapp from "./Whatsapp.astro";
+---
+
+<Whatsapp />
+```
+
+This provides users with a backup contact method if the form fails.
+
+## Usage in pages
+
+```astro src/pages/index.astro
+---
+import Contactanos from "../components/Contactanos.astro";
+---
+
+<Layout title="VELARIA | Inicio">
+  <Contactanos />
+</Layout>
+```
+
+## Accessibility features
+
+- **Label associations:** All inputs have associated `<label>` elements
+- **Autocomplete:** Proper autocomplete attributes for browser autofill
+- **Semantic HTML:** Uses `<form>` element for proper form submission
+- **Focus indicators:** Clear visual focus states on all inputs
+- **Error messaging:** SweetAlert2 provides accessible modal dialogs
+
+## Related resources
+
+<Card title="Product catalog" icon="shopping-bag" href="/features/product-catalog">
+  View products customers can inquire about
+</Card>
+
+<Card title="Animations" icon="sparkles" href="/features/animations">
+  Learn about page animations and transitions
+</Card>

@@ -1,0 +1,219 @@
+---
+title: Fragrances
+description: Discover the available fragrance options for Velaria's handcrafted aromatic candles
+---
+
+The Fragancias component displays all available candle scents with an elegant fade-up animation. Customers can also request custom fragrances not listed.
+
+## Component overview
+
+The `Fragancias` component presents a centered list of five signature fragrances with a smooth fade-up entrance animation powered by the intersection observer.
+
+**Location:** `src/components/Fragancias.astro`
+
+## Available fragrances
+
+Velaria offers five signature aromatic fragrances:
+
+<Steps>
+  <Step title="Vainilla (Vanilla)">
+    Classic, sweet, and comforting vanilla scent
+  </Step>
+  
+  <Step title="Pino (Pine)">
+    Fresh, woody pine fragrance perfect for winter and holidays
+  </Step>
+  
+  <Step title="Sándalo (Sandalwood)">
+    Rich, warm, and earthy sandalwood aroma
+  </Step>
+  
+  <Step title="Canela (Cinnamon)">
+    Spicy, warm cinnamon scent ideal for cozy atmospheres
+  </Step>
+  
+  <Step title="Lavanda (Lavender)">
+    Calming, floral lavender perfect for relaxation
+  </Step>
+</Steps>
+
+<Tip>
+  If you want a fragrance not listed here, Velaria can source it for you. Contact them through the contact form to request custom scents.
+</Tip>
+
+## Component structure
+
+The component uses a responsive flexbox layout with centered content:
+
+```astro
+<div class="flex flex-col justify-center items-center intersect:animate-fade-up animate-once animate-duration-[1000ms] animate-ease-in my-20">
+  <div class="w-[80%] lg:w-[50%]">
+    <div>
+      <h2 class="text-center text-3xl mb-10">Fragancias disponibles</h2>
+      <ul>
+        <li class="mb-5 text-2xl text-orange-900 text-center italic">Vainilla</li>
+        <!-- More fragrances... -->
+      </ul>
+      <p class="text-center text-lg mt-10">
+        Si deseas alguna fragancia que no se encuentre aquí nosotros la conseguimos
+      </p>
+    </div>
+  </div>
+</div>
+```
+
+## Animation implementation
+
+The entire section uses the `animate-fade-up` class from `tailwindcss-animated`:
+
+<Accordion title="Animation classes breakdown">
+  - `intersect:animate-fade-up`: Triggers fade-up animation when visible
+  - `animate-once`: Animation plays only once (doesn't repeat on scroll)
+  - `animate-duration-[1000ms]`: 1-second animation duration
+  - `animate-ease-in`: Smooth easing function
+</Accordion>
+
+<Note>
+  The animation only triggers when the component enters the viewport, creating a smooth reveal effect as users scroll down the page.
+</Note>
+
+## Responsive design
+
+The component adapts to different screen sizes:
+
+| Breakpoint | Container Width | Behavior |
+|------------|-----------------|----------|
+| Mobile | 80% | Full-width on small screens |
+| Large (lg) | 50% | Narrower on desktop for better readability |
+
+## Typography styles
+
+### Heading
+```css
+text-center text-3xl mb-10
+```
+- Centered, large heading (3xl = 1.875rem)
+- 2.5rem bottom margin
+
+### Fragrance list items
+```css
+mb-5 text-2xl text-orange-900 text-center italic
+```
+- Large text (2xl = 1.5rem)
+- Rich orange-brown color (`text-orange-900`)
+- Centered and italicized for elegance
+- 1.25rem bottom margin between items
+
+### Custom fragrance note
+```css
+text-center text-lg mt-10
+```
+- Medium text size (lg = 1.125rem)
+- Centered with large top margin
+
+## Complete component code
+
+<CodeGroup>
+```astro src/components/Fragancias.astro
+<div
+  class="flex flex-col justify-center items-center intersect:animate-fade-up animate-once animate-duration-[1000ms] animate-ease-in my-20"
+>
+  <div class="w-[80%] lg:w-[50%]">
+    <div>
+      <h2 class="text-center text-3xl mb-10">Fragancias disponibles</h2>
+
+      <ul>
+        <li class="mb-5 text-2xl text-orange-900 text-center italic">Vainilla</li>
+        <li class="mb-5 text-2xl text-orange-900 text-center italic">Pino</li>
+        <li class="mb-5 text-2xl text-orange-900 text-center italic">Sándalo</li>
+        <li class="mb-5 text-2xl text-orange-900 text-center italic">Canela</li>
+        <li class="mb-5 text-2xl text-orange-900 text-center italic">Lavanda</li>
+      </ul>
+
+      <p class="text-center text-lg mt-10">
+        Si deseas alguna fragancia que no se encuentre aquí nosotros la conseguimos
+      </p>
+    </div>
+  </div>
+</div>
+```
+</CodeGroup>
+
+## Usage in pages
+
+Import and use the fragrances component in any Astro page:
+
+```astro src/pages/index.astro
+---
+import Fragancias from "../components/Fragancias.astro";
+---
+
+<Layout title="VELARIA | Inicio">
+  <Fragancias />
+</Layout>
+```
+
+<Warning>
+  Ensure the `tailwindcss-intersect` observer script is loaded in your layout before using intersection observer animations. See [Layout.astro:31](/features/animations#observer-setup).
+</Warning>
+
+## Customization options
+
+### Adding new fragrances
+
+To add more fragrances, simply add new list items:
+
+```astro
+<li class="mb-5 text-2xl text-orange-900 text-center italic">Gardenia</li>
+<li class="mb-5 text-2xl text-orange-900 text-center italic">Eucalipto</li>
+```
+
+### Changing animation
+
+You can modify the animation by changing the classes:
+
+```astro
+<!-- Fade left instead -->
+intersect:animate-fade-left
+
+<!-- Longer duration -->
+animate-duration-[2000ms]
+
+<!-- Different easing -->
+animate-ease-out
+```
+
+See the [animations documentation](/features/animations) for all available animation classes.
+
+### Color customization
+
+Change the fragrance text color by modifying the `text-orange-900` class:
+
+```astro
+<!-- Amber tone -->
+<li class="mb-5 text-2xl text-amber-900 text-center italic">Vainilla</li>
+
+<!-- Brown tone -->
+<li class="mb-5 text-2xl text-brown-800 text-center italic">Vainilla</li>
+```
+
+## Accessibility
+
+- **Semantic HTML:** Uses proper `<ul>` and `<li>` tags for list structure
+- **Sufficient contrast:** Orange-900 text on white background meets WCAG AA standards
+- **Readable font size:** 2xl (1.5rem) ensures good readability
+- **Animation consideration:** `animate-once` prevents distracting repeated animations
+
+## Related components
+
+<Card title="Product catalog" icon="shopping-bag" href="/features/product-catalog">
+  Browse all available candle designs and sizes
+</Card>
+
+<Card title="Contact form" icon="envelope" href="/features/contact-form">
+  Request custom fragrances or place orders
+</Card>
+
+<Card title="Animations" icon="sparkles" href="/features/animations">
+  Learn about intersection observer animations
+</Card>

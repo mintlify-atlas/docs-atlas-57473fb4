@@ -1,0 +1,364 @@
+---
+title: Contact endpoint
+description: Submit contact form data and send email notifications
+---
+
+## Overview
+
+The `/api/contact` endpoint processes contact form submissions from the Velaria website. It validates the input data, sends an email notification via an external email API, and returns a success or error response.
+
+<Note>
+  This endpoint is server-side rendered using `export const prerender = false` in Astro.
+</Note>
+
+## Endpoint details
+
+```
+POST /api/contact
+```
+
+## Request parameters
+
+Send a JSON payload in the request body with the following fields:
+
+<ParamField path="name" type="string" required>
+  The customer's first name. Cannot be empty after trimming whitespace.
+</ParamField>
+
+<ParamField path="lastName" type="string" required>
+  The customer's last name. Cannot be empty after trimming whitespace.
+</ParamField>
+
+<ParamField path="email" type="string" required>
+  The customer's email address. Must be a valid email format matching the pattern `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`.
+</ParamField>
+
+<ParamField path="phone" type="string | number" required>
+  The customer's phone number. Cannot be empty.
+</ParamField>
+
+<ParamField path="message" type="string" required>
+  The customer's message or inquiry. Cannot be empty after trimming whitespace.
+</ParamField>
+
+## Request example
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://velaria.com/api/contact \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Maria",
+    "lastName": "Garcia",
+    "email": "maria.garcia@example.com",
+    "phone": "4775759503",
+    "message": "Me gustaría información sobre velas personalizadas para un evento."
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('/api/contact', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: 'Maria',
+    lastName: 'Garcia',
+    email: 'maria.garcia@example.com',
+    phone: '4775759503',
+    message: 'Me gustaría información sobre velas personalizadas para un evento.'
+  })
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+```typescript TypeScript
+interface ContactFormData {
+  name: string;
+  lastName: string;
+  email: string;
+  phone: string | number;
+  message: string;
+}
+
+const formData: ContactFormData = {
+  name: 'Maria',
+  lastName: 'Garcia',
+  email: 'maria.garcia@example.com',
+  phone: '4775759503',
+  message: 'Me gustaría información sobre velas personalizadas para un evento.'
+};
+
+const response = await fetch('/api/contact', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(formData)
+});
+
+const data = await response.json();
+```
+
+</CodeGroup>
+
+## Response format
+
+The endpoint returns a JSON response with the following structure:
+
+<ResponseField name="success" type="boolean" required>
+  Indicates whether the contact form was processed successfully
+</ResponseField>
+
+<ResponseField name="msg" type="string" required>
+  A descriptive message about the result
+</ResponseField>
+
+### Success response (200)
+
+```json
+{
+  "success": true,
+  "msg": "Mensaje recibido"
+}
+```
+
+### Error responses (500)
+
+**Missing or empty fields:**
+```json
+{
+  "success": false,
+  "msg": "Por favor, llena el formulario"
+}
+```
+
+**Invalid email format:**
+```json
+{
+  "success": false,
+  "msg": "Por favor, ingresa un correo válido"
+}
+```
+
+**Server processing error:**
+```json
+{
+  "success": false,
+  "msg": "Error procesando el mensaje"
+}
+```
+
+## Validation rules
+
+The endpoint performs server-side validation on all input fields:
+
+### Required fields validation
+
+All fields must be non-empty after concatenating the full name:
+
+```typescript
+const completeName = name + ' ' + lastName;
+
+if(completeName === "" || email === "" || message === "" || phone === ""){
+  return new Response(
+    JSON.stringify({ success: false, msg: "Por favor, llena el formulario" }),
+    { status: 500 }
+  );
+}
+```
+
+<Warning>
+  Empty strings, null, or undefined values for any field will result in a validation error.
+</Warning>
+
+### Email format validation
+
+The email must match the following regex pattern:
+
+```typescript
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailRegex.test(email)) {
+  return new Response(
+    JSON.stringify({ success: false, msg: "Por favor, ingresa un correo válido" }),
+    { status: 500 }
+  );
+}
+```
+
+**Valid email examples:**
+- `user@example.com`
+- `maria.garcia@company.mx`
+- `contact+info@velaria.com`
+
+**Invalid email examples:**
+- `user@` (missing domain)
+- `@example.com` (missing username)
+- `user @example.com` (contains spaces)
+- `user@example` (missing TLD)
+
+<Tip>
+  Validate email format on the client-side before submitting to provide immediate feedback to users.
+</Tip>
+
+## How it works
+
+The contact endpoint follows this processing flow:
+
+1. **Receive request**: Parse the JSON body from the POST request
+2. **Extract fields**: Destructure `name`, `lastName`, `email`, `phone`, and `message`
+3. **Combine names**: Concatenate first and last name into `completeName`
+4. **Validate required fields**: Check that no fields are empty strings
+5. **Validate email format**: Test email against regex pattern
+6. **Send to email API**: Forward the data to the external email service
+7. **Return response**: Send success or error JSON response
+
+## External email API integration
+
+The endpoint forwards validated form data to an external email service:
+
+```typescript
+await fetch("https://email-api-bj45.vercel.app/api/mail/contact", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(data),
+})
+```
+
+### Email API payload
+
+The external API receives the following structure:
+
+```typescript
+interface formData {
+  name: String,    // Full name (firstName + lastName)
+  email: String,   // Customer email
+  message: String, // Customer message
+  phone: Number    // Customer phone
+}
+```
+
+<Warning>
+  If the external email API is unavailable or returns an error, the contact form submission will still return a success response due to the current error handling implementation. Monitor the server logs for email delivery failures.
+</Warning>
+
+## Error handling
+
+The endpoint uses a try-catch block to handle unexpected errors:
+
+```typescript
+try {
+  // Process request and validation
+  // ...
+} catch (err) {
+  return new Response(
+    JSON.stringify({ success: false, msg: "Error procesando el mensaje" }),
+    { status: 500 }
+  );
+}
+```
+
+Errors are logged to the console for debugging:
+
+```typescript
+console.log("Nuevo mensaje:", {name: completeName, email, message, phone });
+console.log("Informacion enviada a la api: ", data);
+```
+
+## Source code reference
+
+You can find the complete implementation in:
+- `/home/daytona/workspace/source/src/pages/api/contact.ts:48-93`
+
+### Core handler function
+
+```typescript /home/daytona/workspace/source/src/pages/api/contact.ts
+export const POST: APIRoute = async ({ request }) => {
+  try {
+    const body = await request.json();
+    const { name, email, message, lastName, phone } = body;
+
+    const completeName = name + ' ' + lastName;
+
+    console.log("Nuevo mensaje:", {name: completeName, email, message, phone });
+
+    // Validate non-empty fields
+    if(completeName === "" || email === "" || message === "" || phone === ""){
+      return new Response(
+        JSON.stringify({ success: false, msg: "Por favor, llena el formulario" }),
+        { status: 500 }
+      );
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ success: false, msg: "Por favor, ingresa un correo válido" }),
+        { status: 500 }
+      );
+    }
+
+    // Send to email API
+    await sendFormData({name: completeName, email, message, phone})
+
+    return new Response(
+      JSON.stringify({ success: true, msg: "Mensaje recibido" }),
+      { status: 200}
+    );
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ success: false, msg: "Error procesando el mensaje" }),
+      { status: 500 }
+    );
+  }
+};
+```
+
+## Best practices
+
+<Tip>
+  **Client-side validation**: Implement matching validation rules on the client-side to provide immediate feedback before the form is submitted.
+</Tip>
+
+<Tip>
+  **Error feedback**: Display the `msg` field from error responses to help users understand what went wrong and how to fix it.
+</Tip>
+
+<Tip>
+  **Loading states**: Show a loading indicator while the request is being processed to improve user experience.
+</Tip>
+
+<Note>
+  **Form reset**: After a successful submission, reset the form fields and display a success message to the user.
+</Note>
+
+## Troubleshooting
+
+### Common issues
+
+**Issue**: "Por favor, llena el formulario" error
+- **Cause**: One or more required fields are empty or contain only whitespace
+- **Solution**: Ensure all fields have values before submitting
+
+**Issue**: "Por favor, ingresa un correo válido" error
+- **Cause**: The email address doesn't match the required format
+- **Solution**: Verify the email contains a username, @ symbol, domain, and TLD
+
+**Issue**: "Error procesando el mensaje" error
+- **Cause**: An unexpected error occurred during processing
+- **Solution**: Check server logs for details and ensure the external email API is accessible
+
+## Next steps
+
+<Card title="API overview" icon="book" href="/api/overview">
+  Learn more about the Velaria API architecture
+</Card>

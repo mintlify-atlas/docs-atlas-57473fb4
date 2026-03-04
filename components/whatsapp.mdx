@@ -1,0 +1,184 @@
+---
+title: Whatsapp component
+description: WhatsApp contact section with direct messaging link and ordering instructions
+---
+
+## Overview
+
+The Whatsapp component provides a direct WhatsApp messaging option for customers. It features a WhatsApp icon, call-to-action button with hover effects, and detailed instructions for placing orders. The component includes fade-up animations triggered by intersection observers.
+
+## Component code
+
+```astro
+<div class="flex flex-col justify-center items-center intersect:animate-fade-up animate-once animate-duration-[1000ms] animate-ease-in">
+    <div class="w-[80%] lg:w-[50%]">
+        <div class="text-center p-10 mt-5 mb-5">
+            <p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" 
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                     class="icon icon-tabler icons-tabler-outline icon-tabler-brand-whatsapp m-auto mb-3 text-green-500">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
+                    <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" />
+                </svg>
+            </p>
+            <h2 class="mb-5 text-2xl">Envíanos un mensaje</h2>
+            <p class="text-lg">
+                <a id="num-whatsapp" 
+                   class="bg-gray-200 hover:bg-green-400 border-none p-4 rounded hover:text-white transition delay-150 duration-200" 
+                   href="https://wa.me/5214775769503" 
+                   target="_blank">
+                    Envíar mensaje
+                </a>
+            </p>
+        </div>
+        <div class="mb-10 text-center">
+            <span class="text-lg font-light text-gray-600">
+                Al momento de hacer una cotización con nosotros por mensaje o por whatsapp, 
+                indícanos el modelo, el color y la fragancia deseada con por lo menos 4 días 
+                con de anticipación de la fecha deseada de entrega.
+            </span>
+        </div>
+    </div>
+</div>
+```
+
+## Props
+
+This component does not accept any props. The WhatsApp phone number is hardcoded in the component.
+
+## Usage example
+
+```astro
+---
+import Whatsapp from '../components/Whatsapp.astro';
+---
+
+<section>
+  <Whatsapp />
+</section>
+```
+
+<Note>
+  The Whatsapp component is imported and used within the Contactanos component to provide multiple contact options.
+</Note>
+
+## Contact information
+
+<ParamField path="Phone number" type="string">
+  +52 1 477 576 9503
+  
+  Formatted as WhatsApp link: `https://wa.me/5214775769503`
+</ParamField>
+
+<Warning>
+  Update the phone number in the `href` attribute to match your business WhatsApp number. The current number format is for Mexico (+52 country code).
+</Warning>
+
+## Styling details
+
+<Accordion title="Container layout">
+  - Flexbox column layout with centered content
+  - Outer container centers content horizontally and vertically
+  - Inner container: 80% width on mobile, 50% width on large screens
+  - All content centered using `text-center` utility
+</Accordion>
+
+<Accordion title="WhatsApp icon">
+  SVG icon with the following properties:
+  - Size: 50x50 pixels
+  - Color: Green-500 (`text-green-500`)
+  - Auto margins for horizontal centering
+  - 0.75rem bottom margin (mb-3)
+  - Tabler Icons WhatsApp brand icon
+  - Stroke width: 2px
+</Accordion>
+
+<Accordion title="Button styling">
+  The "Envíar mensaje" button features:
+  - Gray-200 background (neutral state)
+  - Green-400 background on hover (WhatsApp brand color)
+  - 1rem padding on all sides
+  - Rounded corners
+  - No border
+  - Text changes to white on hover
+  - Smooth transition: 200ms duration with 150ms delay
+  - Opens in new tab (`target="_blank"`)
+</Accordion>
+
+<Accordion title="Typography">
+  - **Heading (h2)**: 2xl text size (1.5rem), 1.25rem bottom margin
+  - **Button text**: lg text size (1.125rem)
+  - **Instructions**: lg text size, light font weight (300), gray-600 color
+  - All text centered for visual balance
+</Accordion>
+
+<Accordion title="Animation">
+  The entire component animates into view:
+  
+  ```css
+  intersect:animate-fade-up animate-once animate-duration-[1000ms] animate-ease-in
+  ```
+  
+  - **Animation type**: Fade-up (slides up while fading in)
+  - **Duration**: 1000ms (1 second)
+  - **Timing**: Ease-in function
+  - **Frequency**: Once only (doesn't repeat on scroll back)
+  - **Trigger**: When component enters viewport
+</Accordion>
+
+<Accordion title="Spacing">
+  - Top section: 2.5rem padding, 1.25rem top/bottom margins
+  - Bottom instructions: 2.5rem bottom margin
+  - Button: 1.25rem bottom margin from heading
+</Accordion>
+
+<Tip>
+  The hover effect transitions from neutral gray to WhatsApp's signature green color, creating a clear visual cue for interaction.
+</Tip>
+
+## Ordering instructions
+
+The component displays important ordering guidelines:
+
+<Note>
+  "Al momento de hacer una cotización con nosotros por mensaje o por whatsapp, indícanos el modelo, el color y la fragancia deseada con por lo menos 4 días con de anticipación de la fecha deseada de entrega."
+  
+  Translation: When requesting a quote via message or WhatsApp, indicate the model, color, and desired fragrance at least 4 days in advance of the desired delivery date.
+</Note>
+
+Customers should provide:
+
+1. **Model/design** of the candle
+2. **Color** preference
+3. **Fragrance** selection
+4. **Delivery date** (at least 4 days in advance)
+
+<Warning>
+  Ensure your business can accommodate the 4-day minimum lead time mentioned in the instructions. Update this timeframe if your production schedule differs.
+</Warning>
+
+## Best practices
+
+<Tip>
+  The component uses `target="_blank"` to open WhatsApp in a new tab, keeping your website open in the background. This reduces bounce rate and allows customers to return easily.
+</Tip>
+
+<Tip>
+  The 150ms delay on the transition creates a subtle pause before the hover effect activates, preventing accidental trigger from cursor movement.
+</Tip>
+
+## Responsive behavior
+
+- **Mobile devices**: Container uses 80% width for comfortable padding on small screens
+- **Large screens (lg breakpoint)**: Container reduces to 50% width for better readability and focus
+- **Icon and button**: Maintain consistent sizing across all breakpoints
+- **Text**: Remains centered and readable on all screen sizes
+
+## Dependencies
+
+- **Tailwind CSS**: Layout, typography, colors, transitions, and responsive design
+- **Tabler Icons**: WhatsApp SVG icon
+- **Intersection Observer API**: Powers the `intersect:` animation trigger
+- **WhatsApp Web/API**: Opens WhatsApp conversation with the specified number

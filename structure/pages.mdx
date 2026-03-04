@@ -1,0 +1,361 @@
+---
+title: Pages
+description: Understanding Astro routing, pages structure, and API routes in the Velaria project
+---
+
+Pages in Astro are files in the `src/pages/` directory that automatically become routes in your application. Velaria has three main pages and two API endpoints.
+
+## File-based routing
+
+Astro uses file-based routing where each `.astro` file in `src/pages/` becomes a route:
+
+```
+src/pages/
+├── api/
+│   ├── contact.ts
+│   └── contact-email.ts
+├── index.astro              → /
+├── nosotros.astro           → /nosotros
+└── terminos-condiciones.astro → /terminos-condiciones
+```
+
+<Note>
+The filename determines the URL path. For example, `nosotros.astro` is accessible at `/nosotros`.
+</Note>
+
+## Main pages
+
+### index.astro (Homepage)
+
+`src/pages/index.astro`
+
+The landing page that displays all main sections of the site.
+
+```astro
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Intro from "../components/Intro.astro";
+import Producto from "../components/Producto.astro";
+import Catalogo from "../components/Catalogo.astro";
+import Contactanos from "../components/Contactanos.astro";
+import Usos from "../components/Usos.astro";
+import Navbar from "../components/Navbar.astro";
+import ScrollToTop from "../components/ScrollToTop.astro";
+import Fragancias from "../components/Fragancias.astro";
+---
+
+<Layout title="VELARIA | Inicio">
+  <Header title="ILUMINA TUS MOMENTOS MÁS ESPECIALES" 
+          subtitle="VELAS AROMÁTICAS DECORATIVAS ARTESANALES" />
+  <Intro />
+  <Producto />
+  <Catalogo />
+  <Fragancias />
+  <Usos />
+  <Contactanos />
+  <ScrollToTop/>
+</Layout>
+```
+
+**Sections (in order):**
+
+<Steps>
+
+1. **Header** - Hero section with title "ILUMINA TUS MOMENTOS MÁS ESPECIALES"
+2. **Intro** - Brand introduction
+3. **Producto** - Main product showcase
+4. **Catalogo** - Product catalog
+5. **Fragancias** - Available fragrances
+6. **Usos** - Product uses and benefits
+7. **Contactanos** - Contact form
+8. **ScrollToTop** - Back-to-top button
+
+</Steps>
+
+<Tip>
+The homepage is a single-page design where all sections are stacked vertically for a smooth scrolling experience.
+</Tip>
+
+### nosotros.astro (About page)
+
+`src/pages/nosotros.astro`
+
+The "About Us" page explaining Velaria's story and mission.
+
+```astro
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import { Image } from "astro:assets";
+import ScrollToTop from "../components/ScrollToTop.astro";
+---
+
+<Layout title="VELARIA | Nosotros"> 
+    <Header title="SOBRE NOSOTROS" subtitle=""/>
+    <div class="flex flex-col justify-center items-center">
+        <div class="w-[80%] lg:w-[50%] h-auto">
+           <div class="p-10 text-justify mt-5">
+            <Image src={'https://qzvv9kr0sph7bvqi.public.blob.vercel-storage.com/velas2.jpg'} 
+                   width={200} height={200} alt="..." class="..." />
+            <p>En VELARIA creemos que una vela no es solo un objeto decorativo...</p>
+            <br>
+            <p>Nos inspira la idea de transformar lo cotidiano en algo especial...</p>
+            <br>
+            <p>Más que velas, buscamos crear experiencias sensoriales...</p>
+           </div>
+        </div>
+    </div>
+    <ScrollToTop/>
+</Layout>
+```
+
+**Features:**
+- Centered content layout
+- Responsive width (80% mobile, 50% desktop)
+- Remote image from Vercel Blob Storage
+- Text-justified paragraphs
+- Scroll to top button
+
+<Accordion title="Content breakdown">
+
+1. **Header** - "SOBRE NOSOTROS" title
+2. **Image** - Featured candle product image
+3. **Mission statement** - Three paragraphs explaining Velaria's philosophy:
+   - What they believe about candles
+   - Their inspiration and design approach
+   - Their goal of creating sensory experiences
+
+</Accordion>
+
+### terminos-condiciones.astro (Terms page)
+
+`src/pages/terminos-condiciones.astro`
+
+Terms and conditions page (currently with placeholder content).
+
+```astro
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+---
+
+<Layout title="Nosotros"> 
+    <Header title="TÉRMINOS Y CONDICIONES" subtitle=""/>
+    <div class="flex flex-col justify-center items-center">
+        <div class="w-[80%] lg:w-[50%] h-auto">
+           <div class="p-10 text-justify mt-5">
+            <h2 class="title">Términos y condiciones</h2>
+            
+            <p> Lorem, ipsum dolor sit amet...</p>
+            <p>Lorem ipsum dolor sit amet...</p>
+           <p> Lorem, ipsum dolor sit amet...</p>
+            <p>Lorem ipsum dolor sit amet...</p> 
+        </div>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .title{
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+</style>
+```
+
+<Warning>
+This page currently contains Lorem ipsum placeholder text and should be updated with actual terms and conditions before launch.
+</Warning>
+
+## API routes
+
+API routes are TypeScript/JavaScript files in `src/pages/api/` that handle server-side logic.
+
+### contact.ts
+
+`src/pages/api/contact.ts`
+
+Handles contact form submissions from the Contactanos component.
+
+```typescript
+export const prerender = false;
+import type { APIRoute } from "astro";
+
+interface formData {
+  name: String,
+  email: String, 
+  message: String,
+  phone: Number
+}
+
+export const POST: APIRoute = async ({ request }) => {
+  try {
+    const body = await request.json();
+    const { name, email, message, lastName, phone } = body;
+
+    const completeName = name + ' ' + lastName;
+
+    // Validate fields
+    if(completeName === "" || email === "" || message === "" || phone === ""){
+      return new Response(
+        JSON.stringify({ success: false, msg: "Por favor, llena el formulario" }),
+        { status: 500 }
+      );
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ success: false, msg: "Por favor, ingresa un correo válido" }),
+        { status: 500 }
+      );
+    }
+
+    // Send to email API
+    await sendFormData({name: completeName, email, message, phone})
+
+    return new Response(
+      JSON.stringify({ success: true, msg: "Mensaje recibido" }),
+      { status: 200}
+    );
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ success: false, msg: "Error procesando el mensaje" }),
+      { status: 500 }
+    );
+  }
+};
+```
+
+**Endpoint:** `POST /api/contact`
+
+**Request body:**
+
+```json
+{
+  "name": "Juan",
+  "lastName": "Pérez",
+  "email": "juan@example.com",
+  "message": "Mensaje...",
+  "phone": "5214777551754"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "msg": "Mensaje recibido"
+}
+```
+
+<Steps>
+
+### Validation steps
+
+1. **Empty fields check** - Ensures all fields are filled
+2. **Email format validation** - Uses regex to verify valid email
+3. **External API call** - Forwards data to `email-api-bj45.vercel.app`
+4. **Response** - Returns success or error message
+
+</Steps>
+
+**Helper function:**
+
+```typescript
+const sendFormData = (data: formData) => {
+  return new Promise(async(resolve, reject) => {
+    await fetch("https://email-api-bj45.vercel.app/api/mail/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la respuesta del servidor");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Éxito:", data);
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        throw error;
+      });
+
+    setTimeout(() => {
+      resolve({ status: "success" });
+    }, 1000);
+  });
+}
+```
+
+<Note>
+The `prerender: false` directive ensures this API route is always server-rendered, not pre-built at compile time.
+</Note>
+
+### contact-email.ts
+
+`src/pages/api/contact-email.ts`
+
+Currently an empty file, likely reserved for future email functionality.
+
+<Tip>
+This file may be intended for direct email sending without the external API.
+</Tip>
+
+## Page layouts
+
+All pages use the `Layout.astro` wrapper:
+
+```astro
+<Layout title="Page Title">
+  <!-- Page content -->
+</Layout>
+```
+
+The layout provides:
+- HTML document structure
+- Meta tags and favicon
+- Global styles
+- Navbar and Footer
+- JavaScript for interactions
+
+Learn more in the [layouts documentation](/structure/layouts).
+
+## Routing examples
+
+<Card title="Homepage" icon="home">
+**URL:** `/`  
+**File:** `src/pages/index.astro`  
+**Purpose:** Main landing page with all sections
+</Card>
+
+<Card title="About page" icon="info">
+**URL:** `/nosotros`  
+**File:** `src/pages/nosotros.astro`  
+**Purpose:** Company information and mission
+</Card>
+
+<Card title="Contact API" icon="envelope">
+**URL:** `POST /api/contact`  
+**File:** `src/pages/api/contact.ts`  
+**Purpose:** Handle form submissions
+</Card>
+
+## Next steps
+
+<Steps>
+
+1. Understand how [layouts](/structure/layouts) wrap pages
+2. Review [components](/structure/components) used in pages
+3. Explore the [project overview](/structure/overview) for context
+
+</Steps>

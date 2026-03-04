@@ -1,0 +1,243 @@
+---
+title: Contactanos component
+description: Contact form with WhatsApp integration and email submission functionality
+---
+
+## Overview
+
+The Contactanos component provides a comprehensive contact solution with a WhatsApp quick-access button and a detailed contact form. The form collects customer information and sends messages to your API endpoint, with success/error feedback using SweetAlert2 modal dialogs.
+
+## Component code
+
+<CodeGroup>
+```astro Component structure
+---
+import Whatsapp from "./Whatsapp.astro";
+---
+
+<Whatsapp />
+
+<div class="isolate bg-amber-50 px-6 py-24 sm:py-22 lg:px-8 flex justify-center">
+  <div class="bg-white w-[100%] lg:w-[50%] p-5 rounded-lg">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-4xl font-semibold tracking-tight text-balance text-black sm:text-5xl">
+        Déjanos un mensaje
+      </h2>
+      <p class="mt-2 text-lg/8 text-gray-500">
+        Cotiza un pedido o haz alguna pregunta.
+      </p>
+    </div>
+    <form id="contact-form" class="mx-auto mt-16 max-w-xl sm:mt-20">
+      <!-- Form fields -->
+    </form>
+  </div>
+</div>
+```
+
+```javascript Form submission handler
+const form = document.getElementById("contact-form");
+const btn = document.getElementById('btn-submit');
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  btn.setAttribute('disabled', 'true');
+  btn.innerHTML = 'Enviando...';
+
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      Swal.fire({
+        title: "Gracias por tu mensaje",
+        text: "Nos pondrémos en contacto contigo",
+        icon: "success"
+      });
+      form.reset();
+      btn.removeAttribute('disabled');
+      btn.innerHTML = 'Enviar';
+    }
+  } catch (err) {
+    Swal.fire({
+      title: "UPS",
+      text: "Ocurrió un error, por favor, envíanos un mensaje por WhatsApp",
+      icon: "error"
+    });
+  }
+});
+```
+</CodeGroup>
+
+## Props
+
+This component does not accept any props.
+
+## Usage example
+
+```astro
+---
+import Contactanos from '../components/Contactanos.astro';
+---
+
+<section id="contact">
+  <Contactanos />
+</section>
+```
+
+## Form fields
+
+The contact form includes the following fields:
+
+<ParamField path="name" type="text" required>
+  Customer's first name (Nombre)
+</ParamField>
+
+<ParamField path="lastName" type="text" required>
+  Customer's last name (Apellidos)
+</ParamField>
+
+<ParamField path="email" type="email" required>
+  Customer's email address (Correo)
+</ParamField>
+
+<ParamField path="phone" type="text" required>
+  Customer's phone number (Número de teléfono)
+</ParamField>
+
+<ParamField path="message" type="textarea" required>
+  Customer's message or inquiry (Mensaje). 4 rows of text input.
+</ParamField>
+
+<Note>
+  There's a commented-out company field in the source code that you can uncomment if you need to collect business information.
+</Note>
+
+## Styling details
+
+<Accordion title="Container and layout">
+  - Amber-50 background color for warm, inviting feel
+  - Centered flexbox layout with isolate stacking context
+  - Responsive padding: 1.5rem horizontal, 6rem vertical on mobile
+  - White form container: 100% width on mobile, 50% on large screens
+  - Rounded corners (rounded-lg) with 1.25rem padding
+</Accordion>
+
+<Accordion title="Form styling">
+  - Two-column grid on small screens and up (sm:grid-cols-2)
+  - Single column on mobile devices
+  - Gap spacing: 2rem horizontal (gap-x-8), 1.5rem vertical (gap-y-6)
+  - Email, phone, and message fields span both columns (sm:col-span-2)
+  - Maximum width: 36rem (max-w-xl) for readability
+</Accordion>
+
+<Accordion title="Input fields">
+  All input fields share consistent styling:
+  - Black/5 background (semi-transparent black)
+  - 0.875rem horizontal padding, 0.5rem vertical padding
+  - Base text size with black text color
+  - Rounded corners (rounded-md)
+  - Gray-500 placeholder text
+  - Indigo-500 focus outline with 2px width and -2px offset
+</Accordion>
+
+<Accordion title="Submit button">
+  - Full width block display
+  - Yellow-950 background color matching brand
+  - Yellow-800 hover state
+  - White text with semi-bold weight (600)
+  - Small shadow (shadow-xs)
+  - Rounded corners with 0.875rem padding horizontal, 0.625rem vertical
+  - Disabled state during submission
+</Accordion>
+
+<Accordion title="Typography">
+  - **Heading**: 4xl (2.25rem) on mobile, 5xl (3rem) on small screens, black color, semi-bold
+  - **Subheading**: lg text (1.125rem), gray-500 color, 0.5rem top margin
+  - **Labels**: sm text (0.875rem), semi-bold weight, black color
+  - Text is balanced for optimal line breaks (text-balance)
+</Accordion>
+
+## Form submission flow
+
+<Accordion title="Submission process">
+  1. User fills out form and clicks "Enviar" button
+  2. Form prevents default submission and captures data
+  3. Submit button disables and changes text to "Enviando..."
+  4. Form data converts to JSON and posts to `/api/contact`
+  5. Success response shows SweetAlert success modal
+  6. Form resets and button re-enables
+  7. Error response shows SweetAlert error modal with WhatsApp fallback suggestion
+</Accordion>
+
+<Accordion title="Success feedback">
+  ```javascript
+  Swal.fire({
+    title: "Gracias por tu mensaje",
+    text: "Nos pondrémos en contacto contigo",
+    icon: "success"
+  });
+  ```
+  
+  - Form resets to empty state
+  - Button text returns to "Enviar"
+  - Button re-enables for new submissions
+</Accordion>
+
+<Accordion title="Error handling">
+  ```javascript
+  Swal.fire({
+    title: "UPS",
+    text: "Ocurrió un error, intentalo de nuevo más tarde o envíanos un mensaje por WhatsApp",
+    icon: "error"
+  });
+  ```
+  
+  - Button re-enables for retry
+  - Suggests WhatsApp as alternative contact method
+  - Form data preserved for user convenience
+</Accordion>
+
+<Warning>
+  You must implement the `/api/contact` endpoint for the form to function. The component expects a POST endpoint that accepts JSON data with the form fields.
+</Warning>
+
+<Note>
+  The component imports and includes the Whatsapp component at the top, providing users with an alternative quick-contact method.
+</Note>
+
+## Integration details
+
+<ParamField path="API endpoint" type="POST /api/contact">
+  Expected request body:
+  ```json
+  {
+    "name": "string",
+    "lastName": "string",
+    "email": "string",
+    "phone": "string",
+    "message": "string"
+  }
+  ```
+</ParamField>
+
+<Tip>
+  The form provides excellent user feedback throughout the submission process, from loading states to clear success/error messages. This creates a polished user experience.
+</Tip>
+
+<Tip>
+  Consider adding client-side validation before submission to catch common errors like invalid email formats or empty required fields.
+</Tip>
+
+## Dependencies
+
+- **Whatsapp.astro**: Imported component for WhatsApp quick-contact button
+- **SweetAlert2**: Modal dialog library for success/error feedback
+- **Tailwind CSS**: Form styling, layout, and responsive design
+- **Fetch API**: For API communication
+- **FormData API**: For extracting form field values

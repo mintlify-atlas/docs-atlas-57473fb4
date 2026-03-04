@@ -1,0 +1,103 @@
+---
+title: Header component
+description: Hero header component with animated logo, title, and subtitle
+---
+
+## Overview
+
+The Header component serves as the hero section of your pages. It displays the Velaria logo with animated fade-up effects, along with a customizable title and subtitle. The component features a dark overlay for enhanced text readability and is fully responsive.
+
+## Component code
+
+```astro
+---
+import { Image } from "astro:assets";
+
+const { title, subtitle } = Astro.props;
+---
+
+<header class="main-header header">
+    <div class="header-overlay main-content"></div>
+    <div class="header-content">
+       <Image 
+         loading="eager" 
+         class="m-auto pb-3 animate-fade-up animate-delay-400 animate-duration-1000" 
+         src={'https://qzvv9kr0sph7bvqi.public.blob.vercel-storage.com/velariaLogoSimple.png'} 
+         width={100} 
+         height={200} 
+         alt="candle-icon" 
+         width={200} 
+       />
+        <h1 class="animate-delay-500 animate-fade-up">{title}</h1>
+        <p class="animate-fade-up animate-delay-600">{subtitle}</p>
+    </div>
+</header>
+```
+
+## Props
+
+<ParamField path="title" type="string" required>
+  The main heading text displayed in the header. Shows as a large, bold title below the logo.
+</ParamField>
+
+<ParamField path="subtitle" type="string" required>
+  The subtitle text displayed below the title. Used for additional descriptive information.
+</ParamField>
+
+## Usage example
+
+```astro
+---
+import Header from '../components/Header.astro';
+---
+
+<Header 
+  title="Velaria Candles" 
+  subtitle="Handcrafted aromatic candles for every occasion" 
+/>
+```
+
+## Styling details
+
+<Accordion title="Layout and positioning">
+  The header uses flexbox to center content both horizontally and vertically. It includes:
+  - Full-width container with centered content
+  - Absolute-positioned overlay with semi-transparent black background (10% opacity)
+  - Relative-positioned content layer with z-index 10 to appear above the overlay
+</Accordion>
+
+<Accordion title="Typography">
+  - **Title (h1)**: 2.5rem font size with 700 weight, white color
+  - **Subtitle (p)**: 1.8rem font size with text shadow for readability
+  - Both elements use white text color for contrast against the overlay
+</Accordion>
+
+<Accordion title="Animations">
+  The component uses Tailwind CSS animation utilities:
+  - Logo: `animate-fade-up` with 400ms delay and 1000ms duration
+  - Title: `animate-fade-up` with 500ms delay
+  - Subtitle: `animate-fade-up` with 600ms delay
+  
+  These staggered animations create a smooth sequential entrance effect.
+</Accordion>
+
+<Accordion title="Responsive behavior">
+  On mobile devices (max-width: 720px):
+  - Title font size reduces to 1.5rem
+  - Subtitle font size reduces to 1rem
+  - Subtitle gains 1.5rem padding for better spacing
+</Accordion>
+
+<Note>
+  The logo image is loaded with `loading="eager"` to ensure immediate visibility on page load, which is important for above-the-fold content.
+</Note>
+
+<Tip>
+  You can customize the overlay opacity by changing the `rgba(0, 0, 0, 0.112)` value in the `.header-overlay` style to make the background darker or lighter.
+</Tip>
+
+## Dependencies
+
+- **astro:assets**: Used for the `Image` component to optimize image loading
+- **Tailwind CSS**: Animation utilities for fade-up effects
+- **Vercel Blob Storage**: Hosts the Velaria logo image

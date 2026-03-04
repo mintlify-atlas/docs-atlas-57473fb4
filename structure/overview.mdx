@@ -1,0 +1,197 @@
+---
+title: Project structure overview
+description: Understanding the Velaria Astro project structure, directory organization, and configuration files
+---
+
+Velaria is built with Astro, a modern web framework optimized for content-focused websites. This page explains the project's directory structure and configuration.
+
+## Directory structure
+
+The project follows Astro's standard structure with source files in `src/` and static assets in `public/`:
+
+```
+velaria/
+├── public/
+│   └── favicon.svg
+├── src/
+│   ├── assets/
+│   │   ├── images/
+│   │   │   ├── bolitas.jpg
+│   │   │   └── header2.png
+│   │   ├── astro.svg
+│   │   └── background.svg
+│   ├── components/
+│   │   ├── Catalogo.astro
+│   │   ├── Contactanos.astro
+│   │   ├── Footer.astro
+│   │   ├── Fragancias.astro
+│   │   ├── Header.astro
+│   │   ├── Intro.astro
+│   │   ├── Navbar.astro
+│   │   ├── Producto.astro
+│   │   ├── ScrollToTop.astro
+│   │   ├── Usos.astro
+│   │   └── Whatsapp.astro
+│   ├── layouts/
+│   │   └── Layout.astro
+│   ├── pages/
+│   │   ├── api/
+│   │   │   ├── contact.ts
+│   │   │   └── contact-email.ts
+│   │   ├── index.astro
+│   │   ├── nosotros.astro
+│   │   └── terminos-condiciones.astro
+│   └── styles/
+│       └── global.css
+├── astro.config.mjs
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+## Core directories
+
+<Steps>
+
+### src/
+
+The `src/` directory contains all your source code:
+
+- **pages/** - Astro pages and API routes that map to URLs
+- **components/** - Reusable Astro components
+- **layouts/** - Layout templates that wrap page content
+- **assets/** - Images and static assets processed by Astro
+- **styles/** - Global CSS stylesheets
+
+### public/
+
+The `public/` directory contains static assets served as-is:
+
+- `favicon.svg` - Site favicon
+- Files here are copied directly to the build output
+- Not processed by Astro's build system
+
+<Note>
+Files in `public/` are served from the root path. For example, `public/favicon.svg` is accessible at `/favicon.svg`.
+</Note>
+
+</Steps>
+
+## Configuration files
+
+### astro.config.mjs
+
+The main Astro configuration file located at the project root:
+
+```javascript
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
+import vercel from '@astrojs/vercel';
+
+export default defineConfig({
+  output: 'server',
+  vite: {
+    plugins: [tailwindcss()]
+  },
+  adapter: vercel()
+});
+```
+
+<Accordion title="Configuration breakdown">
+
+- **output: 'server'** - Enables server-side rendering (SSR) mode
+- **vite.plugins** - Integrates Tailwind CSS via Vite plugin
+- **adapter: vercel()** - Configures deployment to Vercel platform
+
+</Accordion>
+
+### package.json
+
+Defines project dependencies and scripts:
+
+```json
+{
+  "name": "velas-aromaticas",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/vercel": "^9.0.2",
+    "@tailwindcss/vite": "^4.1.13",
+    "@tailwindplus/elements": "^1.0.13",
+    "astro": "^5.16.6",
+    "sweetalert2": "^11.23.0",
+    "tailwindcss": "^4.1.13",
+    "tailwindcss-animated": "^2.0.0",
+    "tailwindcss-intersect": "^2.2.0"
+  }
+}
+```
+
+<Tip>
+Run `npm run dev` to start the development server, or `npm run build` to create a production build.
+</Tip>
+
+### tsconfig.json
+
+TypeScript configuration for the project:
+
+```json
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "strict": false,
+    "moduleResolution": "bundler",
+    "types": ["astro/client"]
+  }
+}
+```
+
+## Key dependencies
+
+Velaria uses several important libraries:
+
+<Card title="Tailwind CSS" icon="paintbrush">
+Utility-first CSS framework for styling, integrated via Vite plugin with animated and intersect extensions.
+</Card>
+
+<Card title="Tailwind Plus Elements" icon="box">
+Pre-built UI components that extend Tailwind's capabilities.
+</Card>
+
+<Card title="SweetAlert2" icon="bell">
+Beautiful, responsive, customizable popup boxes for user interactions.
+</Card>
+
+<Card title="Vercel Adapter" icon="cloud">
+Enables SSR deployment on Vercel's edge network.
+</Card>
+
+## Asset management
+
+The project uses two approaches for assets:
+
+1. **Local assets** in `src/assets/` - Processed and optimized by Astro
+2. **Remote assets** - Hosted on Vercel Blob Storage (e.g., product images, logos)
+
+<Warning>
+Images in `src/assets/` are optimized during build, while images in `public/` are served as-is without optimization.
+</Warning>
+
+## Next steps
+
+<Steps>
+
+1. Explore the [components](/structure/components) to understand reusable UI elements
+2. Learn about [pages](/structure/pages) and routing
+3. Understand [layouts](/structure/layouts) and how they wrap content
+
+</Steps>

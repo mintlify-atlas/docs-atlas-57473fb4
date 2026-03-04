@@ -1,0 +1,147 @@
+---
+title: Catalogo component
+description: Product catalog grid showcasing candle products with images and pricing
+---
+
+## Overview
+
+The Catalogo component displays a responsive grid of candle products with images, names, and prices. Each product card features intersection-based animations that trigger when products scroll into view. The grid automatically adjusts from 1 to 4 columns based on screen size.
+
+## Component code
+
+<CodeGroup>
+```astro Component structure
+---
+import { Image } from "astro:assets";
+---
+
+<div class="bg-white">
+  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+    <h2 class="sr-only">Productos</h2>
+    <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+      <!-- Product cards -->
+    </div>
+  </div>
+</div>
+```
+
+```astro Product card example
+<div class="group scale-50 opacity-0 intersect:scale-100 intersect:opacity-100 transition duration-500">
+  <Image
+    src={'https://qzvv9kr0sph7bvqi.public.blob.vercel-storage.com/bolitas_muestra.jpg'}
+    width={'200'}
+    height={'300'}
+    alt="Product description"
+    class="aspect-square w-full rounded-lg bg-gray-200 object-cover xl:aspect-7/8"
+  />
+  <h3 class="mt-4 text-sm text-gray-700">Bubbles (chico)</h3>
+  <p class="mt-1 text-lg font-medium text-gray-900">$20.00 mxn</p>
+</div>
+```
+</CodeGroup>
+
+## Props
+
+This component does not accept any props. All products are hardcoded within the component structure.
+
+## Usage example
+
+```astro
+---
+import Catalogo from '../components/Catalogo.astro';
+---
+
+<section>
+  <Catalogo />
+</section>
+```
+
+## Product catalog
+
+The component showcases 10 different candle products:
+
+<Accordion title="Product list with pricing">
+  1. **Bubbles (chico)** - $20.00 MXN
+  2. **Bubbles** - $45.00 MXN
+  3. **Bubbles (con margarita encima)** - $50.00 MXN
+  4. **Geometric** - $40.00 MXN
+  5. **Spiral** - $40.00 MXN
+  6. **Rosa** - $35.00 MXN
+  7. **Envasada decorada** - $85.00 MXN
+  8. **Envasada sencilla** - $75.00 MXN
+  9. **Pino** - $50.00 MXN
+  10. **Ramo de margarita** - $80.00 MXN ($15.00 por margarita extra)
+</Accordion>
+
+## Styling details
+
+<Accordion title="Grid layout">
+  The catalog uses CSS Grid with responsive breakpoints:
+  - **Mobile (default)**: 1 column
+  - **Small screens (sm)**: 2 columns
+  - **Large screens (lg)**: 3 columns
+  - **Extra large (xl)**: 4 columns
+  
+  Gap spacing:
+  - Horizontal gap: 1.5rem (gap-x-6)
+  - Vertical gap: 2.5rem (gap-y-10)
+  - XL horizontal gap increases to 2rem (xl:gap-x-8)
+</Accordion>
+
+<Accordion title="Image styling">
+  Product images feature:
+  - Square aspect ratio (`aspect-square`) for consistency
+  - Full width within their container
+  - Rounded corners (`rounded-lg`)
+  - Gray background color for loading states
+  - Object-cover to maintain aspect ratio
+  - XL screens use 7:8 aspect ratio for taller display
+</Accordion>
+
+<Accordion title="Intersection animations">
+  Each product card animates into view using intersection observers:
+  
+  ```css
+  scale-50 opacity-0 intersect:scale-100 intersect:opacity-100
+  ```
+  
+  - Initial state: 50% scale and invisible
+  - When in viewport: Scales to 100% and becomes fully visible
+  - Transition duration: 500ms to 900ms
+  - Staggered delays create a cascade effect (delay-200, delay-300, etc.)
+</Accordion>
+
+<Accordion title="Typography">
+  - **Product name (h3)**: Small text (text-sm), gray-700 color
+  - **Price (p)**: Large text (text-lg), medium font weight, gray-900 color
+  - Top margin spacing: 1rem for name, 0.25rem for price
+</Accordion>
+
+<Note>
+  The component includes a visually hidden h2 heading ("Productos") with `sr-only` class for screen reader accessibility.
+</Note>
+
+<Tip>
+  The staggered animation delays (delay-200, delay-300, delay-400, etc.) create a visually appealing cascade effect as users scroll. You can adjust these values to speed up or slow down the animation sequence.
+</Tip>
+
+<Warning>
+  All product data is hardcoded in the component. For a production e-commerce site, consider fetching product data from a CMS or database instead.
+</Warning>
+
+## Container structure
+
+<ParamField path="Container" type="layout">
+  - White background (`bg-white`)
+  - Centered with auto margins
+  - Max-width: 672px (max-w-2xl) on mobile, 1280px (max-w-7xl) on large screens
+  - Responsive padding: 1rem/1.5rem on mobile, increases to 2rem on larger screens
+  - Vertical padding: 4rem (py-16) on mobile, 6rem (py-24) on small screens and up
+</ParamField>
+
+## Dependencies
+
+- **astro:assets**: Image component for optimized image loading
+- **Tailwind CSS**: Grid layout, responsive design, and utility classes
+- **Intersection Observer API**: Powers the `intersect:` prefix animations
+- **Vercel Blob Storage**: Hosts all product images

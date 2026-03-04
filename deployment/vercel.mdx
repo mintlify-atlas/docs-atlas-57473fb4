@@ -1,0 +1,190 @@
+---
+title: Deploy to Vercel
+description: Learn how to deploy your Velaria candle store to Vercel with server-side rendering
+---
+
+Velaria is configured to deploy to Vercel with full server-side rendering (SSR) capabilities. This guide walks you through the deployment process and configuration.
+
+## Prerequisites
+
+Before deploying to Vercel, ensure you have:
+
+- A [Vercel account](https://vercel.com/signup)
+- The Vercel CLI installed (optional, for local testing)
+- Your project pushed to a Git repository (GitHub, GitLab, or Bitbucket)
+
+## Vercel adapter setup
+
+Velaria uses the official Astro Vercel adapter to enable server-side rendering. The adapter is already configured in the project.
+
+### Installation
+
+The Vercel adapter is included in your dependencies:
+
+```json package.json
+{
+  "dependencies": {
+    "@astrojs/vercel": "^9.0.2",
+    "astro": "^5.16.6"
+  }
+}
+```
+
+### Configuration
+
+The adapter is configured in `astro.config.mjs` with server output mode:
+
+```javascript astro.config.mjs
+import { defineConfig } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
+import vercel from '@astrojs/vercel';
+
+export default defineConfig({
+  output: 'server',
+  
+  vite: {
+    plugins: [tailwindcss()]
+  },
+  
+  adapter: vercel()
+});
+```
+
+<Note>
+The `output: 'server'` setting enables server-side rendering for all pages. This allows you to use dynamic content, API routes, and server-side logic throughout your application.
+</Note>
+
+## Deployment steps
+
+<Steps>
+  <Step title="Connect your repository">
+    Log in to your [Vercel dashboard](https://vercel.com/dashboard) and click "Add New Project". Select your Git provider and import the Velaria repository.
+  </Step>
+  
+  <Step title="Configure project settings">
+    Vercel automatically detects Astro projects. Verify the following settings:
+    
+    - **Framework Preset**: Astro
+    - **Build Command**: `astro build`
+    - **Output Directory**: `dist`
+    - **Install Command**: `npm install`
+    
+    <Tip>
+    You don't need to modify these settings - Vercel's Astro detection handles them automatically.
+    </Tip>
+  </Step>
+  
+  <Step title="Deploy">
+    Click "Deploy" and Vercel will build and deploy your project. The first deployment typically takes 1-2 minutes.
+  </Step>
+  
+  <Step title="Access your site">
+    Once deployed, Vercel provides you with a production URL (e.g., `your-project.vercel.app`). You can also configure a custom domain in the project settings.
+  </Step>
+</Steps>
+
+## Server-side rendering
+
+With `output: 'server'` configured, your Velaria site benefits from:
+
+- **Dynamic content**: Render pages on-demand with access to request data
+- **API routes**: Create serverless API endpoints in the `src/pages/api/` directory
+- **Form handling**: Process form submissions server-side
+- **Authentication**: Implement user authentication with server-side session management
+
+### How it works
+
+When a user visits your site:
+
+1. Vercel receives the request
+2. The Astro server renders the page dynamically
+3. The rendered HTML is sent to the user
+4. Client-side hydration occurs for interactive components
+
+<Warning>
+Server-side rendering requires a Vercel Pro plan or higher for production usage beyond the free tier limits. Check [Vercel's pricing](https://vercel.com/pricing) for current limits.
+</Warning>
+
+## Environment variables
+
+If your application requires environment variables, add them in the Vercel dashboard:
+
+<Steps>
+  <Step title="Navigate to project settings">
+    Go to your project in Vercel and click "Settings" → "Environment Variables".
+  </Step>
+  
+  <Step title="Add variables">
+    Add your environment variables with their values. For example:
+    
+    ```
+    DATABASE_URL=your_database_connection_string
+    API_KEY=your_api_key
+    ```
+  </Step>
+  
+  <Step title="Redeploy">
+    Environment variables are applied on the next deployment. Trigger a redeploy if needed.
+  </Step>
+</Steps>
+
+<Tip>
+You can access environment variables in your Astro code using `import.meta.env.VARIABLE_NAME`.
+</Tip>
+
+## Deploy with Vercel CLI
+
+For developers who prefer command-line deployments:
+
+```bash
+# Install Vercel CLI globally
+npm i -g vercel
+
+# Login to your account
+vercel login
+
+# Deploy to production
+vercel --prod
+```
+
+## Preview deployments
+
+Vercel automatically creates preview deployments for every push to non-production branches:
+
+- Each pull request gets a unique preview URL
+- Test changes before merging to production
+- Share previews with your team or clients
+
+<Note>
+Preview deployments use the same build configuration as production, ensuring consistency across environments.
+</Note>
+
+## Monitoring and analytics
+
+After deployment, monitor your site's performance:
+
+- **Vercel Analytics**: Track page views, performance metrics, and Web Vitals
+- **Deployment logs**: View build logs and runtime errors in the dashboard
+- **Real-time logs**: Stream function logs for debugging
+
+## Troubleshooting
+
+### Build failures
+
+If your deployment fails, check:
+
+1. Build logs in the Vercel dashboard
+2. Ensure all dependencies are listed in `package.json`
+3. Verify that your local build succeeds with `npm run build`
+
+### Runtime errors
+
+For runtime issues:
+
+1. Check function logs in the Vercel dashboard
+2. Verify environment variables are set correctly
+3. Test locally with `npm run preview` after building
+
+<Tip>
+Run `vercel dev` locally to simulate the Vercel environment and catch issues before deployment.
+</Tip>

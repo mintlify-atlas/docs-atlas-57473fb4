@@ -1,0 +1,208 @@
+---
+title: Product catalog
+description: Learn how the Catalogo component displays handcrafted candles with animations and pricing
+---
+
+The product catalog displays all available candles with images, names, and prices in a responsive grid layout. Each product animates into view using intersection observer animations.
+
+## Component overview
+
+The `Catalogo` component renders the main product showcase on the homepage. It uses Astro's built-in `Image` component for optimized image loading and Tailwind CSS for responsive layouts.
+
+**Location:** `src/components/Catalogo.astro`
+
+## Product data structure
+
+The catalog features 10 unique handcrafted candles:
+
+<Steps>
+  <Step title="Bubbles collection">
+    Three size variants with prices ranging from $20-$50 MXN
+    - Bubbles (chico) - $20.00 MXN
+    - Bubbles (standard) - $45.00 MXN  
+    - Bubbles (con margarita encima) - $50.00 MXN
+  </Step>
+  
+  <Step title="Decorative candles">
+    Geometric and spiral designs at $40.00 MXN each
+    - Geometric - $40.00 MXN
+    - Spiral - $40.00 MXN
+  </Step>
+  
+  <Step title="Specialty items">
+    Premium and seasonal products
+    - Rosa - $35.00 MXN
+    - Pino (Christmas) - $50.00 MXN
+    - Envasada sencilla - $75.00 MXN
+    - Envasada decorada - $85.00 MXN
+    - Ramo de margarita - $80.00 MXN ($15.00 per extra flower)
+  </Step>
+</Steps>
+
+## Image handling
+
+All product images are hosted on Vercel Blob Storage for optimal performance:
+
+```astro
+<Image
+  src={'https://qzvv9kr0sph7bvqi.public.blob.vercel-storage.com/bolitas_muestra.jpg'}
+  width={'200'}
+  height={'300'}
+  alt="Tall slender porcelain bottle with natural clay textured body and cork stopper."
+  class="aspect-square w-full rounded-lg bg-gray-200 object-cover xl:aspect-7/8"
+/>
+```
+
+<Note>
+  The `Image` component from `astro:assets` automatically optimizes images for different screen sizes and formats.
+</Note>
+
+### Image configuration
+
+- **Width/Height:** Fixed at 200x300px for consistency
+- **Aspect ratio:** Square on mobile, 7:8 on extra-large screens
+- **Object fit:** `cover` ensures images fill the container
+- **Background:** Gray placeholder while loading
+
+## Layout structure
+
+The catalog uses a responsive CSS Grid:
+
+```astro
+<div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+  <!-- Product cards -->
+</div>
+```
+
+| Breakpoint | Columns | Gap |
+|------------|---------|-----|
+| Mobile | 1 | 6x (horizontal), 10y (vertical) |
+| Small (sm) | 2 | 6x, 10y |
+| Large (lg) | 3 | 6x, 10y |
+| XL (xl) | 4 | 8x, 10y |
+
+## Intersection observer animations
+
+Each product card animates into view when it enters the viewport:
+
+```astro
+<div class="group scale-50 opacity-0 intersect:scale-100 intersect:opacity-100 transition duration-500">
+  <!-- Product content -->
+</div>
+```
+
+### Animation breakdown
+
+<Accordion title="Initial state">
+  - `scale-50`: Product starts at 50% size
+  - `opacity-0`: Completely transparent
+</Accordion>
+
+<Accordion title="Animated state (on intersect)">
+  - `intersect:scale-100`: Scales to full size
+  - `intersect:opacity-100`: Fades to fully visible
+  - `transition`: Smooth animation
+</Accordion>
+
+<Accordion title="Staggered delays">
+  Different products have different animation delays for a cascade effect:
+  ```astro
+  delay-200 duration-600  // Second product
+  delay-300 duration-700  // Third product
+  delay-400 duration-800  // Fourth product
+  delay-500 duration-900  // Fifth+ products
+  ```
+</Accordion>
+
+<Tip>
+  The `intersect:` prefix is provided by the `tailwindcss-intersect` plugin, which automatically observes elements and applies classes when they enter the viewport.
+</Tip>
+
+## Product card structure
+
+Each product card contains:
+
+```astro
+<div class="group scale-50 opacity-0 intersect:scale-100 intersect:opacity-100 transition duration-500">
+  <Image
+    src={'https://...'}
+    width={'200'}
+    height={'300'}
+    alt="Product description"
+    class="aspect-square w-full rounded-lg bg-gray-200 object-cover xl:aspect-7/8"
+  />
+  <h3 class="mt-4 text-sm text-gray-700">Bubbles (chico)</h3>
+  <p class="mt-1 text-lg font-medium text-gray-900">$20.00 mxn</p>
+</div>
+```
+
+### Styling details
+
+- **Product name:** Small gray text with top margin
+- **Price:** Larger, bold, dark gray text
+- **Special pricing:** Some products use `<b><small>` for additional pricing info
+
+## Complete component code
+
+<CodeGroup>
+```astro src/components/Catalogo.astro
+---
+import { Image } from "astro:assets";
+---
+
+<div class="bg-white">
+  <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+    <h2 class="sr-only">Productos</h2>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+      <div class="group scale-50 opacity-0 intersect:scale-100 intersect:opacity-100 transition duration-500">
+        <Image
+          src={'https://qzvv9kr0sph7bvqi.public.blob.vercel-storage.com/bolitas_muestra.jpg'}
+          width={'200'}
+          height={'300'}
+          alt="Tall slender porcelain bottle with natural clay textured body and cork stopper."
+          class="aspect-square w-full rounded-lg bg-gray-200 object-cover xl:aspect-7/8"
+        />
+        <h3 class="mt-4 text-sm text-gray-700">Bubbles (chico)</h3>
+        <p class="mt-1 text-lg font-medium text-gray-900">$20.00 mxn</p>
+      </div>
+      <!-- Additional products... -->
+    </div>
+  </div>
+</div>
+```
+</CodeGroup>
+
+## Usage in pages
+
+Import and use the catalog component in any Astro page:
+
+```astro src/pages/index.astro
+---
+import Catalogo from "../components/Catalogo.astro";
+---
+
+<Layout title="VELARIA | Inicio">
+  <Catalogo />
+</Layout>
+```
+
+<Warning>
+  Make sure the `tailwindcss-intersect` observer script is loaded in your layout before the component renders. See the [animations documentation](/features/animations) for setup instructions.
+</Warning>
+
+## Accessibility considerations
+
+- **Screen reader only heading:** The `sr-only` class hides "Productos" visually but keeps it accessible
+- **Alt text:** Each image has descriptive alt text for screen readers
+- **Semantic HTML:** Uses proper heading hierarchy (h2, h3) and list structure
+
+## Related components
+
+<Card title="Fragancias" icon="leaf" href="/features/fragrances">
+  View available fragrance options for all candles
+</Card>
+
+<Card title="Animations" icon="sparkles" href="/features/animations">
+  Learn more about intersection observer animations
+</Card>
