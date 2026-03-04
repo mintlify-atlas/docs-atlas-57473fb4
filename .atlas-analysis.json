@@ -1,0 +1,81 @@
+{
+  "projectType": "frontend",
+  "projectName": "Velaria",
+  "projectDescription": "Website for Velaria, a business specializing in handcrafted decorative aromatic candles.",
+  "theme": "almond",
+  "primaryColor": "#fcfcfc",
+  "lightColor": null,
+  "darkColor": null,
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "quick-start"
+        ]
+      },
+      {
+        "group": "Project Structure",
+        "pages": [
+          "structure/overview",
+          "structure/components",
+          "structure/pages",
+          "structure/layouts"
+        ]
+      },
+      {
+        "group": "Features",
+        "pages": [
+          "features/product-catalog",
+          "features/fragrances",
+          "features/contact-form",
+          "features/animations"
+        ]
+      },
+      {
+        "group": "Components",
+        "pages": [
+          "components/header",
+          "components/navbar",
+          "components/catalogo",
+          "components/fragancias",
+          "components/contactanos",
+          "components/whatsapp"
+        ]
+      },
+      {
+        "group": "API",
+        "pages": [
+          "api/overview",
+          "api/contact-endpoint"
+        ]
+      },
+      {
+        "group": "Deployment",
+        "pages": [
+          "deployment/vercel",
+          "deployment/configuration"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Product catalog with animated grid layout",
+    "Multiple candle designs (Bubbles, Geometric, Spiral, Rosa, etc.)",
+    "Five available fragrances with custom fragrance requests",
+    "Contact form with email integration via external API",
+    "WhatsApp integration for direct customer communication",
+    "Responsive design with Tailwind CSS",
+    "Scroll animations and intersection observer effects",
+    "Server-side rendering with Astro",
+    "Vercel deployment adapter"
+  ],
+  "publicApiSurface": [
+    "/api/contact - POST endpoint for contact form submissions",
+    "/api/contact-email - Contact email API endpoint",
+    "Components: Header, Navbar, Catalogo, Fragancias, Contactanos, Usos, Producto, Intro, Footer, ScrollToTop, Whatsapp",
+    "Pages: index (home), nosotros (about), terminos-condiciones (terms)",
+    "Layout: Main layout component with SEO meta tags"
+  ]
+}
