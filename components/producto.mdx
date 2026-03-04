@@ -1,0 +1,168 @@
+---
+title: Producto
+description: Showcase section highlighting product customization and natural ingredients
+---
+
+## Overview
+
+The Producto component is a rich, two-column showcase section that highlights Velaria's key product features: 100% customization and natural, eco-friendly ingredients. It uses a combination of descriptive text, icons, and product imagery to convey the brand's quality and flexibility.
+
+## Component structure
+
+The component consists of two main sections:
+
+1. **Customization showcase** - A grid layout with feature list and product image
+2. **Natural ingredients callout** - A centered message about eco-friendly materials
+
+## Customization section
+
+```astro src/components/Producto.astro (lines 6-140)
+<div class="overflow-hidden bg-orange-100 dark:bg-orange-200 py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+            <div class="lg:pt-4 lg:pr-8">
+                <div class="lg:max-w-lg">
+                    <h2 class="text-base/7 font-semibold text-gray-800">
+                        Tu vela, tu estilo
+                    </h2>
+                    <p class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-yellow-800 sm:text-5xl">
+                        100% Personalizables
+                    </p>
+                    <p class="mt-6 text-lg/8 text-gray-500">
+                        Desde el color, hasta el aroma. Con los colores que
+                        eligas dale a tu vela tu propio estilo haciendo que
+                        sea única e irrepetible
+                    </p>
+                    <!-- Feature list -->
+                </div>
+            </div>
+            <Image ... />
+        </div>
+    </div>
+</div>
+```
+
+### Features highlighted
+
+<Accordion title="Choose your fragrance">
+  The first feature emphasizes fragrance selection with examples: vanilla, lavender, cinnamon, and citrus. Each scent is positioned as conveying something unique for special occasions.
+  
+  **Icon:** Candle flame (Tabler icon)
+</Accordion>
+
+<Accordion title="Customize colors and finishes">
+  The second feature focuses on visual customization, allowing customers to add personal touches like dedications or recipient names.
+  
+  **Icon:** Decorative element (Tabler icon)
+</Accordion>
+
+<Accordion title="We bring your ideas to life">
+  The third feature encourages custom requests, inviting customers to share special ideas that the team will execute.
+  
+  **Icon:** Lightbulb (Tabler icon)
+</Accordion>
+
+## Product image
+
+The component includes a product image with an animated entrance effect:
+
+```astro
+<Image
+    width="900"
+    height="1000"
+    src={'https://qzvv9kr0sph7bvqi.public.blob.vercel-storage.com/product.jpg'}
+    alt="Product screenshot"
+    class="w-2xl max-w-none rounded-xl shadow-xl ring-1 ring-white/10 sm:w-228 md:-ml-4 lg:-ml-0 intersect:animate-fade-left animate-once animate-duration-1000 animate-ease-in animate-alternate animate-fill-forwards interset-half"
+/>
+```
+
+<Note>
+  The image uses Vercel Blob Storage for hosting and includes an intersection observer animation that fades in from the left when scrolled into view.
+</Note>
+
+## Natural ingredients section
+
+```astro src/components/Producto.astro (lines 142-154)
+<div class="flex flex-col justify-center items-center h-50 mt-10">
+    <div class="w-[80%] lg:w-[50%]">
+        <div class="flex items-center gap-2">
+            <svg><!-- Leaf icon --></svg>
+            <h2 class="text-3xl"><span class="text-green-700">Natural</span> y <span class="font-bold">responsable</span></h2>
+        </div>
+        <p class="text-lg">
+            Nuestras velas están hechas con cera de soya 100% natural y mechas
+            ecológicas, libres de toxinas. Así cuidamos del planeta mientras
+            disfrutas de un ambiente cálido y acogedor.
+        </p>
+    </div>
+</div>
+```
+
+This section emphasizes:
+- **100% natural soy wax** - Eco-friendly primary ingredient
+- **Ecological wicks** - Sustainable burning material
+- **Toxin-free** - Safe for indoor use
+- **Environmental responsibility** - Planetary care message
+
+## Styling breakdown
+
+<ParamField path="Background" type="color">
+  - Light: `bg-orange-100`
+  - Dark: `dark:bg-orange-200`
+</ParamField>
+
+<ParamField path="Layout" type="structure">
+  - Two-column grid on desktop (`lg:grid-cols-2`)
+  - Single column on mobile
+  - Generous padding: `py-24` on mobile, `sm:py-32` on larger screens
+</ParamField>
+
+<ParamField path="Typography hierarchy" type="styles">
+  - Eyebrow: `text-base/7 font-semibold text-gray-800`
+  - Main heading: `text-4xl sm:text-5xl font-semibold text-yellow-800`
+  - Body: `text-lg/8 text-gray-500`
+  - Feature labels: `font-semibold text-gray-700`
+</ParamField>
+
+## Animation
+
+The product image uses intersection observer animations from `tailwindcss-intersect`:
+
+- `intersect:animate-fade-left` - Fades in from left when visible
+- `animate-once` - Runs only once
+- `animate-duration-1000` - 1 second duration
+- `animate-ease-in` - Easing function
+- `interset-half` - Triggers at 50% visibility
+
+<Tip>
+  The animation creates a dynamic entrance effect that draws attention to the product image as users scroll.
+</Tip>
+
+## Usage
+
+The Producto component is used on the homepage after the Intro section:
+
+```astro src/pages/index.astro
+import Producto from "../components/Producto.astro";
+
+<Layout title="VELARIA | Inicio">
+    <Header />
+    <Intro />
+    <Producto />
+    <!-- other components -->
+</Layout>
+```
+
+## Dependencies
+
+```json
+{
+  "astro:assets": "Image component for optimized images",
+  "tailwindcss-intersect": "Intersection observer animations",
+  "tailwindcss-animated": "Animation utilities"
+}
+```
+
+<Warning>
+  The component uses external image hosting on Vercel Blob Storage. Ensure the URLs remain accessible or migrate to local assets if needed.
+</Warning>

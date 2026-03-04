@@ -1,0 +1,94 @@
+---
+title: Intro
+description: Introduction section highlighting Velaria's mission and value proposition
+---
+
+## Overview
+
+The Intro component displays a centered introduction message that communicates Velaria's core value proposition: transforming spaces with handcrafted, personalized aromatic candles.
+
+## Component code
+
+```astro src/components/Intro.astro
+<div class="flex flex-col justify-center items-center">
+    <div class="w-[80%] lg:w-[50%]">
+        <div class="text-center p-10 mt-5 mb-5">
+            <h2 class="mb-5 text-2xl">Velas que transforman tu espacio</h2>
+            <p class="text-lg">
+                En <span class="text-amber-600">VELARIA</span> creemos que cada detalle
+                importa. Por eso creamos velas aromáticas únicas, elaboradas a mano
+                con diseños que pueden ser personalizados. Ya sea para un regalo
+                especial, un evento inolvidable o simplemente para consentirte, nuestras
+                velas son el toque perfecto de elegancia y calidez.
+            </p>
+        </div>
+    </div>
+</div>
+```
+
+## Content
+
+### Heading
+"Velas que transforman tu espacio" (Candles that transform your space) - This tagline immediately communicates the transformative quality of Velaria's products.
+
+### Body copy
+The paragraph explains Velaria's attention to detail, handcrafted process, and customization options. It highlights three use cases:
+- Special gifts
+- Unforgettable events
+- Personal enjoyment and self-care
+
+## Styling
+
+<ParamField path="Layout" type="structure">
+  - Flexbox centering for both vertical and horizontal alignment
+  - Width: 80% on mobile, 50% on large screens
+  - Padding: 10 units (p-10)
+  - Margins: 5 units top and bottom
+</ParamField>
+
+<ParamField path="Typography" type="styles">
+  - Heading: `text-2xl` with 5-unit bottom margin
+  - Body: `text-lg` with center alignment
+  - Brand name: `text-amber-600` for emphasis
+</ParamField>
+
+## Usage
+
+The Intro component is used on the homepage immediately after the Header to introduce visitors to Velaria's mission:
+
+```astro src/pages/index.astro
+import Intro from "../components/Intro.astro";
+
+<Layout title="VELARIA | Inicio">
+    <Header title="ILUMINA TUS MOMENTOS MÁS ESPECIALES" subtitle="VELAS AROMÁTICAS DECORATIVAS ARTESANALES" />
+    <Intro />
+    <!-- other components -->
+</Layout>
+```
+
+## Design considerations
+
+### Responsive width
+The content width adjusts from 80% on mobile to 50% on large screens, ensuring readability across devices.
+
+### Text hierarchy
+The heading uses `text-2xl` to establish importance, while the body text uses `text-lg` for comfortable reading.
+
+### Brand emphasis
+The Velaria name is highlighted in amber (`text-amber-600`) to draw attention and maintain brand consistency.
+
+<Tip>
+  This component serves as the "why choose us" section, making it perfect for explaining your unique value proposition right after the hero section.
+</Tip>
+
+## Customization
+
+To update the messaging:
+
+1. Edit the heading text to match your current tagline
+2. Update the paragraph content to reflect your brand story
+3. Adjust the amber highlight color if needed: `text-amber-600`
+
+<Note>
+  Keep the intro text concise (2-4 sentences) to maintain visitor attention and encourage them to scroll further.
+</Note>

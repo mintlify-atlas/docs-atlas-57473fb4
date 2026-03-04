@@ -55,9 +55,14 @@
         "pages": [
           "components/header",
           "components/navbar",
+          "components/intro",
+          "components/producto",
           "components/catalogo",
           "components/fragancias",
+          "components/usos",
           "components/contactanos",
+          "components/footer",
+          "components/scrolltotop",
           "components/whatsapp"
         ]
       },

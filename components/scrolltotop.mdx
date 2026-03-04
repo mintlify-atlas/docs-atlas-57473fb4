@@ -1,0 +1,190 @@
+---
+title: ScrollToTop
+description: Back-to-top button that appears after scrolling
+---
+
+## Overview
+
+The ScrollToTop component provides a floating button that appears when users scroll down the page, allowing them to quickly return to the top. The button is hidden by default and shows dynamically based on scroll position.
+
+## Component code
+
+```astro src/components/ScrollToTop.astro
+<!-- Back to top button -->
+<button
+  type="button"
+  data-twe-ripple-init
+  data-twe-ripple-color="light"
+  class="!fixed bottom-5 end-5 hidden rounded-full bg-amber-600 p-4 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-amber-700 hover:shadow-lg focus:bg-amber-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-amber-800 active:shadow-lg"
+  id="btn-back-to-top">
+  <span class="[&>svg]:w-6">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="3"
+      stroke="currentColor">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+    </svg>
+  </span>
+</button>
+```
+
+## Features
+
+### Fixed positioning
+The button uses fixed positioning (`!fixed`) in the bottom-right corner:
+- Bottom: 5 units (`bottom-5`)
+- Right: 5 units (`end-5`)
+
+### Hidden by default
+The button starts with the `hidden` class and is revealed via JavaScript when the user scrolls down.
+
+### Visual design
+<ParamField path="Shape" type="style">
+  `rounded-full` - Circular button
+</ParamField>
+
+<ParamField path="Background colors" type="color">
+  - Default: `bg-amber-600`
+  - Hover: `hover:bg-amber-700`
+  - Focus: `focus:bg-amber-700`
+  - Active: `active:bg-amber-800`
+</ParamField>
+
+<ParamField path="Shadow" type="style">
+  - Default: `shadow-md`
+  - Hover: `hover:shadow-lg`
+  - Active: `active:shadow-lg`
+</ParamField>
+
+<ParamField path="Icon" type="details">
+  - Upward arrow
+  - Width: 6 units (24px)
+  - Stroke width: 3
+  - Color: White
+</ParamField>
+
+## JavaScript implementation
+
+The button's show/hide behavior is controlled by JavaScript in the Layout component:
+
+```javascript src/layouts/Layout.astro (lines 38-42)
+const mybutton = document.getElementById('btn-back-to-top');
+
+window.addEventListener('scroll', function () {
+  if (window.scrollY > 20) {
+    mybutton.classList.remove('hidden');
+  } else {
+    mybutton.classList.add('hidden');
+  }
+});
+
+mybutton.addEventListener('click', function () {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+```
+
+### Show/hide logic
+- **Threshold:** 20 pixels
+- **Action when scrollY > 20:** Remove `hidden` class (button appears)
+- **Action when scrollY ≤ 20:** Add `hidden` class (button disappears)
+
+### Scroll behavior
+- **Click action:** Scroll to top of page
+- **Animation:** Smooth scroll (`behavior: 'smooth'`)
+
+<Tip>
+  The 20-pixel threshold ensures the button doesn't appear immediately, preventing visual clutter at the top of the page.
+</Tip>
+
+## Styling details
+
+### Button dimensions
+- Padding: `p-4` (16px on all sides)
+- The circular shape combined with equal padding creates a perfect circle
+
+### Typography
+- Font size: `text-xs`
+- Font weight: `font-medium`
+- Text transform: `uppercase`
+- Line height: `leading-tight`
+- Color: `text-white`
+
+### Transitions
+- Duration: `duration-150`
+- Easing: `ease-in-out`
+- Applies to all state changes (hover, focus, active)
+
+### Accessibility
+- Focus outline removed: `focus:outline-none focus:ring-0`
+- Button type explicitly set: `type="button"`
+- Semantic HTML: Uses `<button>` element
+
+<Warning>
+  While the focus outline is removed, the button has focus styling via background color change. Consider adding a visible focus indicator for better accessibility.
+</Warning>
+
+## Ripple effect
+
+The button includes data attributes for Tailwind Elements ripple effect:
+- `data-twe-ripple-init` - Initializes ripple
+- `data-twe-ripple-color="light"` - Sets ripple color
+
+<Note>
+  The ripple effect requires Tailwind Elements JavaScript library to be initialized. Without it, the button will still function normally but without the ripple animation.
+</Note>
+
+## Usage
+
+The ScrollToTop component is imported in the Layout and placed at the page level:
+
+```astro src/layouts/Layout.astro
+import ScrollToTop from "../components/ScrollToTop.astro";
+
+<!-- page content -->
+<ScrollToTop />
+```
+
+And in the homepage:
+
+```astro src/pages/index.astro
+import ScrollToTop from "../components/ScrollToTop.astro";
+
+<Layout title="VELARIA | Inicio">
+    <!-- components -->
+    <ScrollToTop />
+</Layout>
+```
+
+## Customization
+
+### Change the scroll threshold
+Edit the threshold value in Layout.astro:
+
+```javascript
+if (window.scrollY > 100) {  // Appears after 100px instead of 20px
+    mybutton.classList.remove('hidden');
+}
+```
+
+### Change colors
+Modify the background color classes:
+
+```astro
+class="... bg-blue-600 hover:bg-blue-700 active:bg-blue-800 ..."
+```
+
+### Change position
+Adjust the positioning utilities:
+
+```astro
+class="!fixed bottom-10 start-5 ..."  <!-- Bottom-left instead of bottom-right -->
+```
+
+<Tip>
+  Consider adding a fade-in animation when the button appears for a smoother user experience.
+</Tip>

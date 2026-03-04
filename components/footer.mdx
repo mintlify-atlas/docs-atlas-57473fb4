@@ -1,0 +1,97 @@
+---
+title: Footer
+description: Site footer with navigation and copyright information
+---
+
+## Overview
+
+The Footer component provides a consistent footer across all pages with navigation links and copyright information. It features a responsive layout with the Velaria brand name and key navigation items.
+
+## Component code
+
+```astro src/components/Footer.astro
+<footer class="shadow-sm dark:bg-yellow-950 bg-orange-100 m-0">
+    <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+        <div class="sm:flex sm:items-center sm:justify-between">
+            <a href="https://flowbite.com/" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-orange-100 text-orange-900">VELARIA</span>
+            </a>
+            <ul class="flex flex-wrap items-center mb-6 text-sm font-medium text-orange-900 sm:mb-0 dark:text-orange-100">
+                <li>
+                    <a href="/nosotros" class="hover:underline me-4 md:me-6">NOSOTROS</a>
+                </li>
+            </ul>
+        </div>
+        <hr class="my-6 border-amber-800 sm:mx-auto dark:border-amber-100 lg:my-8" />
+        <span class="block text-sm text-amber-800 sm:text-center dark:text-gray-400">© 2025 <a href="https://flowbite.com/" class="hover:underline">VELARIA</a>. Sitio web desarrollado por DevelopCrew</span>
+    </div>
+</footer>
+```
+
+## Features
+
+### Responsive layout
+The footer uses Flexbox for responsive arrangement, stacking vertically on mobile and displaying horizontally on larger screens.
+
+### Navigation links
+Currently includes a link to the "Nosotros" (About) page with hover effects.
+
+### Dark mode support
+The footer includes dark mode styling:
+- Light mode: `bg-orange-100` background
+- Dark mode: `dark:bg-yellow-950` background
+- Text colors adapt automatically
+
+### Brand presentation
+The Velaria brand name is displayed prominently in the footer with semibold 2xl typography.
+
+## Styling
+
+<ParamField path="Background" type="color">
+  - Light: `bg-orange-100`
+  - Dark: `dark:bg-yellow-950`
+</ParamField>
+
+<ParamField path="Text colors" type="color">
+  - Brand name: `text-orange-900` / `dark:text-orange-100`
+  - Links: `text-orange-900` / `dark:text-orange-100`
+  - Copyright: `text-amber-800` / `dark:text-gray-400`
+</ParamField>
+
+<ParamField path="Divider" type="color">
+  `border-amber-800` / `dark:border-amber-100`
+</ParamField>
+
+## Usage
+
+The Footer component is imported and placed at the bottom of the Layout component, ensuring it appears on all pages:
+
+```astro src/layouts/Layout.astro
+import Footer from "../components/Footer.astro";
+
+// ... other code
+
+<Footer />
+```
+
+<Note>
+  The footer includes a copyright notice crediting DevelopCrew as the website developer.
+</Note>
+
+## Customization
+
+To add more navigation items to the footer:
+
+1. Add new `<li>` elements to the navigation list
+2. Include the link path and text
+3. Apply the hover effect class: `hover:underline`
+
+```astro
+<li>
+    <a href="/terminos-condiciones" class="hover:underline me-4 md:me-6">TÉRMINOS Y CONDICIONES</a>
+</li>
+```
+
+<Tip>
+  The footer includes commented-out code for a Terms and Conditions link that can be easily enabled if needed.
+</Tip>

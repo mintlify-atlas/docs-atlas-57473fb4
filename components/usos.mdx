@@ -1,0 +1,174 @@
+---
+title: Usos
+description: Use cases section showcasing occasions perfect for Velaria candles
+---
+
+## Overview
+
+The Usos (Uses) component displays a list of occasions and contexts where Velaria candles are ideal. It uses icon-driven design to visually communicate each use case, making it easy for customers to envision how the candles fit into their lives.
+
+## Component code
+
+```astro src/components/Usos.astro
+<div class="flex flex-col justify-center items-center">
+    <div class="w-[80%] lg:w-[50%]">
+        <div class="p-10 mb-5">
+            <h2 class="mb-10 text-3xl text-center">Perfectas para cualquier ocasión</h2>
+            <ul class="lista">
+                <li>
+                    <svg><!-- Cake icon --></svg>
+                    Bodas, bautizos y cumpleaños
+                </li>
+                <li>
+                    <svg><!-- Gift icon --></svg>
+                    Regalos
+                </li>
+                <li>
+                    <svg><!-- Christmas tree icon --></svg>
+                    Fechas especiales como San Valentín o Navidad
+                </li>
+                <li>
+                    <svg><!-- Home icon --></svg>
+                    Para tu hogar y esos momentos de relajación
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+```
+
+## Use cases listed
+
+### 1. Celebrations
+**Icon:** Cake (Tabler icon)
+**Text:** "Bodas, bautizos y cumpleaños" (Weddings, baptisms, and birthdays)
+
+Highlights Velaria candles as perfect for major life celebrations and milestone events.
+
+### 2. Gifts
+**Icon:** Gift box (Tabler icon)
+**Text:** "Regalos" (Gifts)
+
+Positions candles as thoughtful, elegant gift options for any recipient.
+
+### 3. Special holidays
+**Icon:** Christmas tree (Tabler icon)
+**Text:** "Fechas especiales como San Valentín o Navidad" (Special dates like Valentine's Day or Christmas)
+
+Emphasizes seasonal and romantic occasions where candles create ambiance.
+
+### 4. Home and relaxation
+**Icon:** Home (Tabler icon)
+**Text:** "Para tu hogar y esos momentos de relajación" (For your home and those moments of relaxation)
+
+Frames candles as self-care products for everyday use and stress relief.
+
+## Styling
+
+### Layout
+<ParamField path="Container" type="structure">
+  - Centered flex container
+  - Width: 80% on mobile, 50% on large screens
+  - Padding: 10 units
+  - Bottom margin: 5 units
+</ParamField>
+
+### Typography
+<ParamField path="Heading" type="styles">
+  - Size: `text-3xl`
+  - Alignment: `text-center`
+  - Bottom margin: `mb-10`
+</ParamField>
+
+### List items
+Each list item uses a custom styled format defined in the component's `<style>` section:
+
+```css
+.lista li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    font-size: 18px;
+}
+.lista li svg {
+    color: #7b3306;
+}
+```
+
+<ParamField path="List styling" type="details">
+  - Display: Flexbox row
+  - Icon-text gap: 10px
+  - Item spacing: 1rem bottom margin
+  - Font size: 18px
+  - Icon color: `#7b3306` (brown)
+</ParamField>
+
+## Icons
+
+The component uses inline SVG icons from the Tabler Icons library:
+
+- **Cake** - Celebrations and events
+- **Gift** - Presents and gifting occasions
+- **Christmas tree** - Holidays and special dates
+- **Home** - Personal use and relaxation
+
+All icons are styled with:
+- Width and height: 24px
+- Stroke width: 2
+- Stroke linecap: round
+- Stroke linejoin: round
+- Color: `#7b3306` (brown)
+
+<Tip>
+  The brown icon color (`#7b3306`) ties into Velaria's warm, natural brand palette and complements the candle aesthetic.
+</Tip>
+
+## Usage
+
+The Usos component is placed on the homepage after the product catalog and fragrances sections:
+
+```astro src/pages/index.astro
+import Usos from "../components/Usos.astro";
+
+<Layout title="VELARIA | Inicio">
+    <Header />
+    <Intro />
+    <Producto />
+    <Catalogo />
+    <Fragancias />
+    <Usos />
+    <Contactanos />
+</Layout>
+```
+
+## Design pattern
+
+This component follows a common UX pattern of **context-of-use marketing**, helping potential customers:
+
+1. Visualize specific scenarios where they'd use the product
+2. Identify purchase occasions (gifts, events, self-care)
+3. Connect emotionally with relevant life moments
+
+<Note>
+  The icon-driven list format makes the content scannable and memorable, which is crucial for conversion-focused sections.
+</Note>
+
+## Customization
+
+To add more use cases:
+
+1. Add a new `<li>` element to the list
+2. Include an appropriate Tabler icon SVG
+3. Write the use case text in Spanish
+4. The custom CSS styling will automatically apply
+
+Example:
+
+```astro
+<li>
+    <svg><!-- Office/workspace icon --></svg>
+    Para ambientar tu espacio de trabajo
+</li>
+```
